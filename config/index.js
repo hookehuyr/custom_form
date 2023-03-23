@@ -1,3 +1,10 @@
+/*
+ * @Date: 2023-03-23 11:17:54
+ * @LastEditors: hookehuyr hookehuyr@gmail.com
+ * @LastEditTime: 2023-03-23 17:55:06
+ * @FilePath: /custom_form/config/index.js
+ * @Description: 文件描述
+ */
 const path = require('path')
 
 import ComponentsPlugin from 'unplugin-vue-components/webpack'
@@ -20,6 +27,7 @@ const config = {
   },
   alias: {
     // 配置目录别名
+    '@': path.resolve(__dirname, '../src'),
     '@/utils': path.resolve(__dirname, '../src/utils'),
     '@/components': path.resolve(__dirname, '../src/components'),
     '@/images': path.resolve(__dirname, '../src/assets/images'),
@@ -31,7 +39,17 @@ const config = {
   },
   sourceRoot: 'src',
   outputRoot: `dist/${process.env.TARO_ENV}`,
-  plugins: ['@tarojs/plugin-html'],
+  plugins: [
+    '@tarojs/plugin-html',
+    [
+      '@tarojs/plugin-http',
+      {
+        disabledFormData: false,
+        disabledBlob: false,
+        enableCookie: true,
+      },
+    ],
+  ],
   defineConstants: {},
   copy: {
     patterns: [],
@@ -77,7 +95,7 @@ const config = {
         },
       },
     },
-    enableSourceMap: false
+    enableSourceMap: false,
   },
   h5: {
     webpackChain(chain) {
@@ -102,7 +120,7 @@ const config = {
           generateScopedName: '[name]__[local]___[hash:base64:5]',
         },
       },
-    },
+    }
   },
 }
 

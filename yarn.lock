@@ -1684,6 +1684,15 @@
     "@tarojs/service" "3.6.2"
     "@tarojs/shared" "3.6.2"
 
+"@tarojs/plugin-http@^3.6.2":
+  version "3.6.2"
+  resolved "https://mirrors.cloud.tencent.com/npm/@tarojs/plugin-http/-/plugin-http-3.6.2.tgz#e3133a70626f42a3cf9f36c3d330aab7a0cd31ee"
+  integrity sha512-RzVqgtGzg5RDQN57zN7IjJqNR7yzRLYN799aaEAA/WL9mEImcmv5SjnnmcLjW8+D3M0hXOGrA6f+kHFhFoCNDg==
+  dependencies:
+    "@tarojs/runtime" "3.6.2"
+    "@tarojs/service" "3.6.2"
+    "@tarojs/shared" "3.6.2"
+
 "@tarojs/plugin-platform-alipay@3.6.2":
   version "3.6.2"
   resolved "https://mirrors.cloud.tencent.com/npm/@tarojs/plugin-platform-alipay/-/plugin-platform-alipay-3.6.2.tgz#6e9ae8d801699addbc23ca3e858c3d9845d4c1d8"
@@ -2929,6 +2938,11 @@ aws4@^1.8.0:
   version "1.12.0"
   resolved "https://mirrors.cloud.tencent.com/npm/aws4/-/aws4-1.12.0.tgz#ce1c9d143389679e253b314241ea9aa5cec980d3"
   integrity sha512-NmWvPnx0F1SfrQbYwOi7OeaNGokp9XhzNioJ/CSBs8Qa4vxug81mhJEAVZwxXuBmYB5KDRfMq/F3RR0BIU7sWg==
+
+axios-miniprogram@^2.0.0-rc-2:
+  version "2.0.0-rc-2"
+  resolved "https://mirrors.cloud.tencent.com/npm/axios-miniprogram/-/axios-miniprogram-2.0.0-rc-2.tgz#2431d61d4cd8813b420843907feb35ae254dccc1"
+  integrity sha512-GL1yDds9P/evGPqJFXIU/2VD9/9rUL7I4WnvExuocGWAfEO9oYV7DUt6Vjd5a6F1jkltVCwxtpMPQO9ZWGRZhQ==
 
 babel-code-frame@^6.26.0, babel-code-frame@^6.8.0:
   version "6.26.0"
@@ -13022,6 +13036,11 @@ websocket-extensions@>=0.1.1:
   version "0.1.4"
   resolved "https://mirrors.cloud.tencent.com/npm/websocket-extensions/-/websocket-extensions-0.1.4.tgz#7f8473bc839dfd87608adb95d7eb075211578a42"
   integrity sha512-OqedPIGOfsDlo31UNwYbCFMSaO9m9G/0faIHj5/dZFDMFqPTcx6UwqyOy3COEaEOg/9VsGIpdqn62W5KhoKSpg==
+
+weixin-js-sdk@^1.6.0:
+  version "1.6.0"
+  resolved "https://mirrors.cloud.tencent.com/npm/weixin-js-sdk/-/weixin-js-sdk-1.6.0.tgz#ff50484d8118ce1208f11248cf4a1c0831577514"
+  integrity sha512-3IYQH7aalJGFJrwdT3epvTdR1MboMiH7vIZ5BRL2eYOJ12BNah7csoMkmSZzkq1+l92sSq29XdTCVjCJoK2sBQ==
 
 weui@^1.1.2:
   version "1.1.3"

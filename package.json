@@ -43,6 +43,7 @@
     "@tarojs/helper": "3.6.2",
     "@tarojs/plugin-framework-vue3": "3.6.2",
     "@tarojs/plugin-html": "3.6.2",
+    "@tarojs/plugin-http": "^3.6.2",
     "@tarojs/plugin-platform-alipay": "3.6.2",
     "@tarojs/plugin-platform-h5": "3.6.2",
     "@tarojs/plugin-platform-jd": "3.6.2",
@@ -53,9 +54,11 @@
     "@tarojs/runtime": "3.6.2",
     "@tarojs/shared": "3.6.2",
     "@tarojs/taro": "3.6.2",
+    "axios-miniprogram": "^2.0.0-rc-2",
     "dayjs": "^1.11.7",
     "pinia": "^2.0.33",
-    "vue": "^3.0.0"
+    "vue": "^3.0.0",
+    "weixin-js-sdk": "^1.6.0"
   },
   "devDependencies": {
     "@babel/core": "^7.8.0",
