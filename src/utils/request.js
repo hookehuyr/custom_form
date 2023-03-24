@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-09-19 14:11:06
  * @LastEditors: hookehuyr hookehuyr@gmail.com
- * @LastEditTime: 2023-03-23 17:56:29
+ * @LastEditTime: 2023-03-24 11:16:19
  * @FilePath: /custom_form/src/utils/request.js
  * @Description: 简单axios封装，后续按实际处理
  */
@@ -30,7 +30,7 @@ import { DEV_PROXY_TARGET, PROD_PROXY_TARGET, PROGRAM_PREFIX } from '../../confi
 // import { getToken } from '@/utils/auth'
 // import BASE_URL from './config';
 let BASE_URL = ''
-if (process.env.NODE_ENV !== 'development') {
+if (process.env.NODE_ENV === 'development') {
   BASE_URL = DEV_PROXY_TARGET // 测试服务器
 } else {
   BASE_URL = PROD_PROXY_TARGET // 正式服务器

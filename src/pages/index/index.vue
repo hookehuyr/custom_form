@@ -1,10 +1,5 @@
 <template>
   <view class="index">
-    <nut-row>
-      <nut-col :span="is_pc ? 22 : 24" :offset="is_pc ? 1 : 0">
-        <div style="background-color: red; color: white;">span:24</div>
-      </nut-col>
-    </nut-row>
     <nut-config-provider :theme-vars="themeVars">
       <nut-dialog no-cancel-btn title="温馨提示" content="表单收集量已达到限额，无法再提交数据。" v-model:visible="show_reach_sjsj_max_count" @ok="onOk" />
     </nut-config-provider>

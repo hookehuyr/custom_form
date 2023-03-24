@@ -10,6 +10,7 @@ const path = require('path')
 import ComponentsPlugin from 'unplugin-vue-components/webpack'
 import NutUIResolver from '@nutui/nutui-taro/dist/resolver'
 
+// 配置LESS全局变量
 const pluginOptions = {
   less: {
     patterns: [path.resolve(__dirname, '..', 'src/assets/styles/base.less')],
