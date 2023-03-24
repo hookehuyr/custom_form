@@ -125,6 +125,10 @@ onMounted(async () => {
 
     }
   }
+  // 获取信息后重定向到表单页
+  Taro.redirectTo({
+    url: `../table/index?code=${code}&model=${model}`
+  })
 });
 
 </script>
