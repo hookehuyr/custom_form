@@ -1,7 +1,7 @@
 /*
  * @Date: 2023-03-23 11:17:54
  * @LastEditors: hookehuyr hookehuyr@gmail.com
- * @LastEditTime: 2023-03-23 17:55:06
+ * @LastEditTime: 2023-03-24 10:59:28
  * @FilePath: /custom_form/config/index.js
  * @Description: 文件描述
  */
@@ -9,6 +9,12 @@ const path = require('path')
 
 import ComponentsPlugin from 'unplugin-vue-components/webpack'
 import NutUIResolver from '@nutui/nutui-taro/dist/resolver'
+
+const pluginOptions = {
+  less: {
+    patterns: [path.resolve(__dirname, '..', 'src/assets/styles/base.less')],
+  },
+}
 
 const config = {
   projectName: 'custom_form',
@@ -49,6 +55,7 @@ const config = {
         enableCookie: true,
       },
     ],
+    ['taro-plugin-style-resource', pluginOptions],
   ],
   defineConstants: {},
   copy: {
@@ -120,7 +127,7 @@ const config = {
           generateScopedName: '[name]__[local]___[hash:base64:5]',
         },
       },
-    }
+    },
   },
 }
 
