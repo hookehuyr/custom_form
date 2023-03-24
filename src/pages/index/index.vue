@@ -1,5 +1,5 @@
 <template>
-  <view class="index">
+  <view class="index-page">
     <nut-config-provider :theme-vars="themeVars">
       <nut-dialog no-cancel-btn title="温馨提示" content="表单收集量已达到限额，无法再提交数据。" v-model:visible="show_reach_sjsj_max_count" @ok="onOk" />
     </nut-config-provider>
@@ -22,9 +22,6 @@ import { getFormSettingAPI } from "@/api/form.js";
 const themeVars = {
   primaryColor: styleColor.baseColor,
 };
-
-// web端判断
-const is_pc = computed(() => process.env.TARO_ENV === 'h5' && wxInfo().isPC);
 
 const code = getUrlParams(location.href) ? getUrlParams(location.href).code : '';
 const model = getUrlParams(location.href) ? getUrlParams(location.href).model : '';

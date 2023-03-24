@@ -1633,6 +1633,11 @@
     swiper "6.8.0"
     weui "^1.1.2"
 
+"@tarojs/extend@^3.6.2":
+  version "3.6.2"
+  resolved "https://mirrors.cloud.tencent.com/npm/@tarojs/extend/-/extend-3.6.2.tgz#f7badc3e322b76b616e10194f030cd5126ce4a6a"
+  integrity sha512-lKClhLFk9CPfT2z+djdzX4dBr3KLCzVystjC4KnZ00EAW7j6DlyiudwVUXmPwHAyEkq7n99qKZBy/lWQ3+p+cw==
+
 "@tarojs/helper@3.6.2":
   version "3.6.2"
   resolved "https://mirrors.cloud.tencent.com/npm/@tarojs/helper/-/helper-3.6.2.tgz#f1f2e1225a8b3cdfa99ffd62349279350d2c01a2"
