@@ -1,17 +1,34 @@
 /*
  * @Date: 2023-03-23 11:17:54
  * @LastEditors: hookehuyr hookehuyr@gmail.com
- * @LastEditTime: 2023-03-24 14:14:27
+ * @LastEditTime: 2023-03-24 16:04:21
  * @FilePath: /custom_form/src/app.js
  * @Description: 文件描述
  */
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
 import './app.less'
+import { mainStore } from '@/stores'
+import { getFormSettingAPI } from '@/api/form.js'
+import { getUrlParams } from '@/utils/tools'
 
 const App = createApp({
   // 可以使用所有的 Vue 生命周期方法
-  mounted() {
+  async mounted() {
+    if (process.env.TARO_ENV === 'h5') {
+      const code = getUrlParams(location.href)
+        ? getUrlParams(location.href).code
+        : ''
+      const store = mainStore();
+      // 数据收集设置
+      const { data } = await getFormSettingAPI({ form_code: code });
+      const form_setting = {};
+      if (data.length) {
+        Object.assign(form_setting, data[0]['property_list'], data[0]['extend']);
+      }
+      // 缓存表单设置
+      store.changeFormSetting(form_setting);
+    }
   },
 
   // 对应 onLaunch

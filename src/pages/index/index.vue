@@ -8,15 +8,15 @@
 
 <script setup>
 import { ref, computed, watchEffect, onMounted } from "vue";
-import Taro from '@tarojs/taro'
-import { mainStore } from '@/stores'
 import { wxInfo, getUrlParams } from "@/utils/tools";
 // 初始化WX环境
 import wx from 'weixin-js-sdk'
 import { wxJsAPI } from '@/api/wx/config'
 import { apiList } from '@/api/wx/jsApiList.js'
 import { styleColor } from "@/constant.js";
-import { getFormSettingAPI } from "@/api/form.js";
+import { mainStore } from '@/stores'
+import { getFormSettingAPI } from '@/api/form.js'
+import Taro from '@tarojs/taro'
 
 // TAG: 自定义主题颜色
 const themeVars = {
@@ -37,7 +37,6 @@ const onOk = () => {
 
 onMounted(async () => {
   const store = mainStore();
-  const raw_url = encodeURIComponent(location.pathname + location.hash);
   // 数据收集设置
   const { data } = await getFormSettingAPI({ form_code: code });
   const form_setting = {};
@@ -46,6 +45,8 @@ onMounted(async () => {
   }
   // 缓存表单设置
   store.changeFormSetting(form_setting);
+
+  const raw_url = encodeURIComponent(location.pathname + location.hash);
   // 没有授权判断
   const no_auth_info = form_setting.wxzq_enable && !form_setting.x_field_weixin_openid;
   const no_preview_model = model !== 'preview';

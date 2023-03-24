@@ -1,8 +1,8 @@
 <!--
  * @Date: 2023-03-24 09:19:27
  * @LastEditors: hookehuyr hookehuyr@gmail.com
- * @LastEditTime: 2023-03-24 15:19:34
- * @FilePath: /custom_form/src/pages/table/index.vue
+ * @LastEditTime: 2023-03-24 15:55:18
+ * @FilePath: /custom_form/src/pages/index/index.vue
  * @Description: 文件描述
 -->
 <template>
@@ -13,7 +13,7 @@
 </template>
 
 <script setup>
-import Taro from '@tarojs/taro'
+import Taro, { useLoad } from '@tarojs/taro'
 import { $ } from '@tarojs/extend'
 import { createComponentType } from "@/hooks/useComponentType";
 import { ref, computed, watchEffect, onMounted } from "vue";
@@ -125,6 +125,7 @@ onMounted(async () => {
   // TAG: 全局背景色
   $('body').css('background-color', styleColor.backgroundColor)
   const { data } = await queryFormAPI({ form_code });
+
   const form_data = data;
   // 动态修改标题
   Taro.setNavigationBarTitle({
