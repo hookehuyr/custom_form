@@ -1,7 +1,7 @@
 /*
  * @Date: 2023-03-23 11:17:54
  * @LastEditors: hookehuyr hookehuyr@gmail.com
- * @LastEditTime: 2023-03-24 10:59:28
+ * @LastEditTime: 2023-03-24 13:49:26
  * @FilePath: /custom_form/config/index.js
  * @Description: 文件描述
  */
@@ -47,6 +47,7 @@ const config = {
   sourceRoot: 'src',
   outputRoot: `dist/${process.env.TARO_ENV}`,
   plugins: [
+    'taro-plugin-pinia',
     '@tarojs/plugin-html',
     [
       '@tarojs/plugin-http',

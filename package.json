@@ -56,7 +56,8 @@
     "@tarojs/taro": "3.6.2",
     "axios-miniprogram": "^2.0.0-rc-2",
     "dayjs": "^1.11.7",
-    "pinia": "^2.0.33",
+    "pinia": "2.0.10",
+    "taro-plugin-pinia": "^1.0.0",
     "taro-plugin-style-resource": "^0.1.9",
     "vue": "^3.0.0",
     "weixin-js-sdk": "^1.6.0"

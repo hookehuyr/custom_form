@@ -9,9 +9,6 @@
 <script setup>
 import { ref, computed, watchEffect, onMounted } from "vue";
 import Taro from '@tarojs/taro'
-import { useDidShow } from '@tarojs/taro'
-import request from '@/utils/request';
-import { storeToRefs } from 'pinia'
 import { mainStore } from '@/stores'
 import { wxInfo, getUrlParams } from "@/utils/tools";
 // 初始化WX环境
@@ -29,17 +26,20 @@ const themeVars = {
 // web端判断
 const is_pc = computed(() => process.env.TARO_ENV === 'h5' && wxInfo().isPC);
 
-const store = mainStore();
-const { formInfo } = storeToRefs(store);
+const code = getUrlParams(location.href) ? getUrlParams(location.href).code : '';
+const model = getUrlParams(location.href) ? getUrlParams(location.href).model : '';
 
 const show_reach_sjsj_max_count = ref(false);
+
 const onOk = () => {
   show_reach_sjsj_max_count.value = false;
+  Taro.redirectTo({
+    url: `../table/index?code=${code}&model=${model}`
+  })
 }
 
 onMounted(async () => {
-  const code = getUrlParams(location.href) ? getUrlParams(location.href).code : '';
-  const model = getUrlParams(location.href) ? getUrlParams(location.href).model : '';
+  const store = mainStore();
   const raw_url = encodeURIComponent(location.pathname + location.hash);
   // 数据收集设置
   const { data } = await getFormSettingAPI({ form_code: code });
@@ -61,13 +61,6 @@ onMounted(async () => {
   if (process.env.NODE_ENV !== 'development' && no_auth_info && form_setting.wxzq_scope) {
     // 预览模式不开启
     if (no_preview_model) {
-      // $router.replace({
-      //   path: '/auth',
-      //   query: {
-      //     href: location.hash,
-      //     code
-      //   }
-      // });
       Taro.redirectTo({
         url: `../auth/index?href=${location.hash}&code=${code}`
       })
@@ -76,7 +69,6 @@ onMounted(async () => {
     // 判断跳转页面
     if (form_setting.sjsj_enable === 0 && !form_setting.sjsj_enable) {
       // 表单已结束
-      // $router.push("/stop?status=disable");
       Taro.navigateTo({
         url: '../stop/index?status=disable'
       })
@@ -85,14 +77,12 @@ onMounted(async () => {
     if (form_setting.sjsj_is_time_range && form_setting.sjsj_is_time_range) {
       // 未开始
       if (form_setting.server_time < form_setting.sjsj_begin_time) {
-        // $router.push("/stop?status=apply");
         Taro.navigateTo({
           url: '../stop/index?status=apply'
         })
       }
       // 已结束
       if (form_setting.server_time > form_setting.sjsj_end_time) {
-        // $router.push("/stop?status=finish");
         Taro.navigateTo({
           url: '../stop/index?status=finish'
         })
@@ -112,13 +102,8 @@ onMounted(async () => {
     }
     // 当数据量达到限额时，该表单将不能继续提交数据。
     if (form_setting.is_reach_sjsj_max_count) {
-      // showDialog({
-      //   title: '温馨提示',
-      //   message: '表单收集量已达到限额，无法再提交数据。',
-      //   theme: 'round-button',
-      //   confirmButtonColor: styleColor.baseColor
-      // });
       show_reach_sjsj_max_count.value = true;
+      return false;
     }
     // 设定填写次数
     if (form_setting.wxzq_scope && no_preview_model) {
