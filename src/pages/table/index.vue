@@ -1,14 +1,55 @@
 <!--
  * @Date: 2023-03-24 09:19:27
  * @LastEditors: hookehuyr hookehuyr@gmail.com
- * @LastEditTime: 2023-03-24 15:55:18
- * @FilePath: /custom_form/src/pages/index/index.vue
+ * @LastEditTime: 2023-03-31 18:02:51
+ * @FilePath: /custom_form/src/pages/table/index.vue
  * @Description: 文件描述
 -->
 <template>
   <div class="table-page">
     <nut-noticebar v-if="formSetting.sjsj_is_count_down" :text="notice_text" :scrollable="true"
-    :closeMode="true"  right-icon="circle-close" />{{ formSetting }}
+    :closeMode="true"  right-icon="circle-close" />
+    <div class="table-box" :style="{ margin: is_pc ? '1rem 0' : '1rem', overflow: 'auto' }">
+      <template v-if="PHeader.visible">
+        <image v-if="PHeader.type === 'image'" :src="PHeader.cover" mode="widthFix" style="width: 100%;" />
+        <template v-if="PHeader.type === 'carousel'">
+          <nut-swiper class="my-swipe" pagination-color="#fff" auto-play="3000">
+            <nut-swiper-item v-for="(image, index) in PHeader.cover" :key="index">
+              <img :src="image" style="height: 12rem; width: 100%; object-fit: cover" />
+            </nut-swiper-item>
+          </nut-swiper>
+        </template>
+        <div v-if="PHeader.type === 'text'" class="PHeader-Text taro_html" v-html="PHeader.banner" />
+      </template>
+      <view v-if="PHeader.label" class="table-title taro_html" v-html="PHeader.label" />
+      <div v-if="PHeader.description" class="table-desc taro_html" v-html="PHeader.description" />
+      <nut-config-provider :theme-vars="themeVars">
+        <nut-form ref="ruleForm">
+          <component v-for="(item, index) in formData"
+            :id="item.key"
+            :ref="(el) => setRefMap(el, item)"
+            :key="index"
+            :is="{...item.component}"
+            :item="item"
+            @active="onActive" />
+          <!-- <template v-for="(item, index) in formData" :id="item.key">
+            <nut-form-item v-if="index === 0" :prop="item.name" :required="item.required" :rules="item.rules">
+              <nut-input v-model="item.value" :type="item.type"
+                :placeholder="item.component_props.placeholder ? item.component_props.placeholder : '请输入'"
+                :readonly="item.component_props.readonly || (item.component_props.is_camera_scan && !item.component_props.is_edit_camera_scan_result)"
+                :disabled="item.component_props.disabled" :input-align="item.component_props.align">
+                </nut-input>
+            </nut-form-item>
+          </template> -->
+          <div v-if="formData.length && PCommit.visible" style="margin: 16px">
+          <!-- <nut-button round block type="primary" onclick="onSubmit"> -->
+          <nut-button round block type="primary" @click="onSubmit">
+            {{ PCommit.text ? PCommit.text : '提交' }}
+          </nut-button>
+        </div>
+        </nut-form>
+      </nut-config-provider>
+    </div>
   </div>
 </template>
 
@@ -16,7 +57,7 @@
 import Taro, { useLoad } from '@tarojs/taro'
 import { $ } from '@tarojs/extend'
 import { createComponentType } from "@/hooks/useComponentType";
-import { ref, computed, watchEffect, onMounted } from "vue";
+import { ref, computed, watchEffect, onMounted, reactive } from "vue";
 import _ from "@/utils/lodash";
 import { storeToRefs } from 'pinia'
 import { mainStore } from '@/stores'
@@ -25,6 +66,10 @@ import { addFormDataAPI } from "@/api/data.js";
 import { wxInfo, getUrlParams } from "@/utils/tools";
 import { styleColor } from "@/constant.js";
 import { sharePage } from '@/composables/useShare.js'
+// 初始化WX环境
+import wx from 'weixin-js-sdk'
+
+const ruleForm = ref(null);
 
 // // 获取表单设置
 const store = mainStore();
@@ -42,8 +87,9 @@ const PHeaderHeight = computed(() => {
 });
 // TAG: 自定义主题颜色
 const themeVars = {
-  buttonPrimaryBackground: styleColor.baseColor,
-  buttonPrimaryBorderColor: styleColor.baseColor,
+  // buttonPrimaryBackground: styleColor.baseColor,
+  // buttonPrimaryBorderColor: styleColor.baseColor,
+  primaryColor: styleColor.baseColor,
 };
 
 const PHeader = ref({});
@@ -80,6 +126,7 @@ const formatData = (data) => {
 
 // 处理没有绑定值的组件的赋值
 // 省市区选择，图片上传，文件上传，电子签名，评分组件
+const input = ref([]);
 const area_picker = ref([]);
 const image_uploader = ref([]);
 const file_uploader = ref([]);
@@ -88,6 +135,9 @@ const rate_picker = ref([]);
 // 动态绑定ref数据
 const setRefMap = (el, item) => {
   if (el) {
+    if (item.component_props.tag === "input") {
+      input.value.push(el);
+    }
     if (item.component_props.tag === "area_picker") {
       area_picker.value.push(el);
     }
@@ -123,13 +173,13 @@ const onSubmitPwd = async () => {
 
 onMounted(async () => {
   // TAG: 全局背景色
-  $('body').css('background-color', styleColor.backgroundColor)
+  // $('body').css('background-color', styleColor.backgroundColor)
   const { data } = await queryFormAPI({ form_code });
 
   const form_data = data;
   // 动态修改标题
   Taro.setNavigationBarTitle({
-    title: form_data.name
+    title: form_data.name ? form_data.name : ''
   });
   form_name.value = form_data.name;
   // 重构数据结构
@@ -212,7 +262,7 @@ onMounted(async () => {
   checkUserPassword();
   // 启用分享功能，非预览模式
   if (formSetting.value.wxzq_is_share && model !== 'preview') {
-    Taro.ready(() => {
+    wx.ready(() => {
       /**
        * 微信分享卡片标题模式
        * form_name=使用表单名称作为分享标题，customize=自定义分享标题
@@ -311,6 +361,9 @@ const checkRules = () => {
 
 // 操作绑定自定义字段回调
 const onActive = (item) => {
+  if (item.key === "input") {
+    postData.value[item.filed_name] = item.value;
+  }
   if (item.key === "area_picker") {
     postData.value[item.filed_name] = item.value;
   }
@@ -347,12 +400,24 @@ const onActive = (item) => {
   checkRules();
 };
 
-// 检验没有绑定name的输入项
+// 检验输入项控件的Rules
 const validOther = () => {
   let valid = {
     status: true,
     key: "",
   };
+  if (input.value) {
+    // 单行文本
+    input.value.forEach((item, index) => {
+      if (!input.value[index].validInput()) {
+        valid = {
+          status: input.value[index].validInput(),
+          key: "input",
+        };
+        return false;
+      }
+    });
+  }
   if (area_picker.value) {
     // 省市区地址
     area_picker.value.forEach((item, index) => {
@@ -426,7 +491,7 @@ const preValidData = (values) => {
 
 const onSubmit = async (values) => {
   // 表单数据处理
-  postData.value = preValidData(values);
+  // postData.value = preValidData(values);
   // 合并扩展字段
   postData.value = { ...postData.value, x_field_1, x_cycle };
   // 检查非表单输入项
@@ -469,18 +534,23 @@ const onSubmit = async (values) => {
 };
 </script>
 
-<style lang="less" scoped>
+<style lang="less">
+.table-page {
+  background-color: #FAF9DC;
+  min-height: calc(100vh);
+  position: relative;
+}
 .table-title {
-  padding: 1rem;
-  font-size: 1.15rem;
+  padding: 30px;
+  font-size: 30px;
   text-align: center;
   white-space: pre-wrap;
 }
 
 .table-desc {
-  padding: 0rem 1rem;
+  padding: 0rem 30px;
   color: #666;
-  font-size: 0.9rem;
+  font-size: 26px;
   white-space: pre-wrap;
 
   img {
@@ -490,7 +560,7 @@ const onSubmit = async (values) => {
 
 .table-box {
   background-color: #ffffff;
-  padding-bottom: 1rem;
+  padding-bottom: 30px;
 }
 
 .wrapper {
@@ -501,7 +571,7 @@ const onSubmit = async (values) => {
 }
 
 .block {
-  width: 10rem;
+  width: 300px;
   // height: 10rem;
   background-color: #fff;
 }
@@ -515,13 +585,13 @@ const onSubmit = async (values) => {
   .block {
     width: 80vw;
     background-color: #fff;
-    padding: 1rem;
+    padding: 30px;
     border-radius: 5px;
   }
 }
 
 .PHeader-Text {
-  padding: 1rem;
+  padding: 30px;
   font-weight: bold;
   white-space: pre;
 }

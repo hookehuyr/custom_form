@@ -1359,10 +1359,10 @@
   resolved "https://mirrors.cloud.tencent.com/npm/@nutui/icons-vue-taro/-/icons-vue-taro-0.0.9.tgz#b5223eb01e2b987fdbe460e5d0439a66481e54f1"
   integrity sha512-10VYAtFC+o1X0anGs+y2PgF1NWMeLFz2JVMRw4BWLg6wbtVbYy9wukLxyGhZC6Yf6t39DcwaGVda8paV7K6/Ew==
 
-"@nutui/nutui-taro@^4.0.0":
-  version "4.0.3"
-  resolved "https://mirrors.cloud.tencent.com/npm/@nutui/nutui-taro/-/nutui-taro-4.0.3.tgz#a77f644832b4c98f1e4a3cf93b9498057f7ccb5f"
-  integrity sha512-/+xCfUBRE8DcBQpQirgU3GgsaaRmnGu46olvwhjNm5WpJ+SmhloTYrG7Y0aqwnmI3Z9HRVsW8mEUW/ypzPviHQ==
+"@nutui/nutui-taro@^4.0.4":
+  version "4.0.4"
+  resolved "https://mirrors.cloud.tencent.com/npm/@nutui/nutui-taro/-/nutui-taro-4.0.4.tgz#c5b65431ece527e3e531bc7923ad0a7b499daeeb"
+  integrity sha512-v9XyXidgiRgZTH5JofgjhJTGGvQDXhOqkLb/uRjlR2c9eQBSU653rlTO82VjUWOpCterYDxtqXswUZIf+PRbfQ==
   dependencies:
     "@nutui/icons-vue-taro" "^0.0.9"
     sass "^1.50.0"
