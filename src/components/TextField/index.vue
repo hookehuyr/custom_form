@@ -1,14 +1,14 @@
 <!--
  * @Date: 2022-08-29 14:31:20
  * @LastEditors: hookehuyr hookehuyr@gmail.com
- * @LastEditTime: 2023-03-31 17:57:13
+ * @LastEditTime: 2023-04-03 13:17:42
  * @FilePath: /custom_form/src/components/TextField/index.vue
  * @Description: 单行文本输入框(微信扫描功能)
 -->
 <template>
   <div v-if="HideShow" class="text-field-page">
     <div class="label">
-      <span v-if="item.component_props.required">&nbsp;*</span>
+      <text v-if="item.component_props.required">&nbsp;*</text>
       {{ item.component_props.label }}
     </div>
     <!-- <div class="note-wrapper" v-if="item.component_props.note" v-html="item.component_props.note" /> -->
@@ -191,7 +191,7 @@ defineExpose({ validInput });
     font-size: 26px;
     font-weight: bold;
 
-    span {
+    text {
       color: red;
     }
 
