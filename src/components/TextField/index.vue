@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-08-29 14:31:20
  * @LastEditors: hookehuyr hookehuyr@gmail.com
- * @LastEditTime: 2023-04-03 13:17:42
+ * @LastEditTime: 2023-04-03 13:31:03
  * @FilePath: /custom_form/src/components/TextField/index.vue
  * @Description: 单行文本输入框(微信扫描功能)
 -->
@@ -142,31 +142,18 @@ const clickRightIcon = () => {
   }
 }
 
-// watch(
-//   () => input_value.value,
-//   (newValue, oldValue) => {
-//     console.warn(newValue);
-//     // props.item.value = {
-//     //   key: "input",
-//     //   filed_name: props.item.key,
-//     //   value: newValue,
-//     // };
-//     // emit("active", props.item.value);
-//   },
-//   { immediate: true }
-// );
-
-onMounted(() => {
-})
-const changeInput = (val) => {
-  // props.item.value = {
-  //   key: "input",
-  //   filed_name: props.item.key,
-  //   value: val,
-  // };
-  // emit("active", props.item.value);
-  // validInput();
-}
+watch(
+  () => input_value.value,
+  (newValue, oldValue) => {
+    props.item.value = {
+      key: "input",
+      filed_name: props.item.key,
+      value: newValue,
+    };
+    emit("active", props.item.value);
+  },
+  { immediate: true }
+);
 
 // 校验模块
 const validInput = () => {
@@ -217,7 +204,6 @@ defineExpose({ validInput });
 //   border-radius: 7px;
 //   padding: 7px 14px !important;
 // }
-
 
 input {
   color: #000 !important;
