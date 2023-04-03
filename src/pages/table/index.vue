@@ -1,7 +1,7 @@
 <!--
  * @Date: 2023-03-24 09:19:27
  * @LastEditors: hookehuyr hookehuyr@gmail.com
- * @LastEditTime: 2023-04-03 13:32:11
+ * @LastEditTime: 2023-04-03 16:52:30
  * @FilePath: /custom_form/src/pages/table/index.vue
  * @Description: 文件描述
 -->
@@ -128,6 +128,7 @@ const formatData = (data) => {
 // 省市区选择，图片上传，文件上传，电子签名，评分组件
 const input = ref([]);
 const textarea = ref([]);
+const radio = ref([]);
 const area_picker = ref([]);
 const image_uploader = ref([]);
 const file_uploader = ref([]);
@@ -141,6 +142,9 @@ const setRefMap = (el, item) => {
     }
     if (item.component_props.tag === "textarea") {
       textarea.value.push(el);
+    }
+    if (item.component_props.tag === "radio") {
+      radio.value.push(el);
     }
     if (item.component_props.tag === "area_picker") {
       area_picker.value.push(el);
@@ -371,6 +375,9 @@ const onActive = (item) => {
   if (item.key === "textarea") {
     postData.value[item.filed_name] = item.value;
   }
+  if (item.type === "radio") { // 单选控件
+    postData.value = Object.assign(postData.value, { [item.key]: item.affix ? item.affix : item.value });
+  }
   if (item.key === "area_picker") {
     postData.value[item.filed_name] = item.value;
   }
@@ -388,9 +395,6 @@ const onActive = (item) => {
   }
   if (item.type === "picker") { // 下拉框控件
     postData.value = _.assign(postData.value, { [item.key]: item.value });
-  }
-  if (item.type === "radio") { // 单选控件
-    postData.value = _.assign(postData.value, { [item.key]: item.affix ? item.affix : item.value });
   }
   if (item.type === "checkbox") { // 多选控件
     const checkbox_value = _.cloneDeep(item.value)
@@ -432,6 +436,18 @@ const validOther = () => {
         valid = {
           status: textarea.value[index].validTextarea(),
           key: "textarea",
+        };
+        return false;
+      }
+    });
+  }
+  if (radio.value) {
+    // 单选框
+    radio.value.forEach((item, index) => {
+      if (!radio.value[index].validRadio()) {
+        valid = {
+          status: radio.value[index].validRadio(),
+          key: "radio",
         };
         return false;
       }
