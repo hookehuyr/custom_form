@@ -1,7 +1,7 @@
 <!--
  * @Date: 2023-03-24 09:19:27
  * @LastEditors: hookehuyr hookehuyr@gmail.com
- * @LastEditTime: 2023-03-31 18:02:51
+ * @LastEditTime: 2023-04-03 13:32:11
  * @FilePath: /custom_form/src/pages/table/index.vue
  * @Description: 文件描述
 -->
@@ -127,6 +127,7 @@ const formatData = (data) => {
 // 处理没有绑定值的组件的赋值
 // 省市区选择，图片上传，文件上传，电子签名，评分组件
 const input = ref([]);
+const textarea = ref([]);
 const area_picker = ref([]);
 const image_uploader = ref([]);
 const file_uploader = ref([]);
@@ -137,6 +138,9 @@ const setRefMap = (el, item) => {
   if (el) {
     if (item.component_props.tag === "input") {
       input.value.push(el);
+    }
+    if (item.component_props.tag === "textarea") {
+      textarea.value.push(el);
     }
     if (item.component_props.tag === "area_picker") {
       area_picker.value.push(el);
@@ -364,6 +368,9 @@ const onActive = (item) => {
   if (item.key === "input") {
     postData.value[item.filed_name] = item.value;
   }
+  if (item.key === "textarea") {
+    postData.value[item.filed_name] = item.value;
+  }
   if (item.key === "area_picker") {
     postData.value[item.filed_name] = item.value;
   }
@@ -413,6 +420,18 @@ const validOther = () => {
         valid = {
           status: input.value[index].validInput(),
           key: "input",
+        };
+        return false;
+      }
+    });
+  }
+  if (textarea.value) {
+    // 多行文本
+    textarea.value.forEach((item, index) => {
+      if (!textarea.value[index].validTextarea()) {
+        valid = {
+          status: textarea.value[index].validTextarea(),
+          key: "textarea",
         };
         return false;
       }

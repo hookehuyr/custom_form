@@ -1,6 +1,6 @@
 import _ from '@/utils/lodash'
 import TextField from '@/components/TextField/index.vue'
-// import TextareaField from '@/components/TextareaField/index.vue'
+import TextareaField from '@/components/TextareaField/index.vue'
 // import RadioField from '@/components/RadioField/index.vue'
 // import CheckboxField from '@/components/CheckboxField/index.vue'
 // import PickerField from '@/components/PickerField/index.vue'
@@ -75,13 +75,11 @@ export function createComponentType(data) {
       item.name = item.key
       item.component = TextField
     }
-    // if (item.component_props.tag === 'textarea') {
-    //   item.type = 'textarea'
-    //   item.name = item.key
-    //   // item.rows = 10;
-    //   item.autosize = true
-    //   item.component = TextareaField
-    // }
+    if (item.component_props.tag === 'textarea') {
+      item.type = 'textarea'
+      item.name = item.key
+      item.component = TextareaField
+    }
     // if (item.component_props.tag === 'number') {
     //   item.name = item.key
     //   item.component = NumberField
