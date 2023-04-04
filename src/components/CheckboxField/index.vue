@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-08-30 11:34:19
  * @LastEditors: hookehuyr hookehuyr@gmail.com
- * @LastEditTime: 2023-04-04 15:11:55
+ * @LastEditTime: 2023-04-04 15:50:47
  * @FilePath: /custom_form/src/components/CheckboxField/index.vue
  * @Description: 多项选择控件
 -->
@@ -120,7 +120,7 @@ const validCheckbox = () => {
   // 必填项
   props.item.component_props.options.some(item => {
     // 必选项勾选校验
-    if (!checkbox_value.value.length && item.input_required) {
+    if (props.item.component_props.required && !checkbox_value.value.length) {
       show_error.value = true;
       error_msg.value = '必填项不能为空';
       return true;

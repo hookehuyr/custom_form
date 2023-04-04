@@ -136,8 +136,8 @@ const showUrl = (rule) => { // 跳转设置链接
   // 小程序需要配置制定域名内网页，功能无法实现。
 }
 const rule_content = ref("");
-
 const show_error = ref(false);
+
 // 校验模块
 const validRadio = () => {
   // 必填项
