@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-08-29 14:31:20
  * @LastEditors: hookehuyr hookehuyr@gmail.com
- * @LastEditTime: 2023-04-03 14:07:03
+ * @LastEditTime: 2023-04-04 15:11:32
  * @FilePath: /custom_form/src/components/TextareaField/index.vue
  * @Description: 多行文本输入框
 -->
@@ -86,7 +86,7 @@ const validTextarea = () => {
   return !show_error.value;
 };
 
-defineExpose({ validTextarea });
+defineExpose({ validTextarea, id: props.item.key });
 </script>
 
 <style lang="less">

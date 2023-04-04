@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-08-30 11:34:19
  * @LastEditors: hookehuyr hookehuyr@gmail.com
- * @LastEditTime: 2023-04-04 15:00:16
+ * @LastEditTime: 2023-04-04 15:07:00
  * @FilePath: /custom_form/src/components/MultiRuleField/index.vue
  * @Description: 多选规则确认控件
 -->
@@ -136,7 +136,7 @@ const validMultiRule= () => {
   return !show_error.value;
 };
 
-defineExpose({ validMultiRule });
+defineExpose({ validMultiRule, id: props.item.key });
 </script>
 
 <style lang="less">

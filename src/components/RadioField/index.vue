@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-08-30 11:34:19
  * @LastEditors: hookehuyr hookehuyr@gmail.com
- * @LastEditTime: 2023-04-04 14:58:27
+ * @LastEditTime: 2023-04-04 15:11:44
  * @FilePath: /custom_form/src/components/RadioField/index.vue
  * @Description: 单项选择控件
 -->
@@ -156,7 +156,7 @@ const validRadio = () => {
   return !show_error.value;
 };
 
-defineExpose({ validRadio });
+defineExpose({ validRadio, id: props.item.key });
 </script>
 
 <style lang="less">

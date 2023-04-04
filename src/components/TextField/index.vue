@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-08-29 14:31:20
  * @LastEditors: hookehuyr hookehuyr@gmail.com
- * @LastEditTime: 2023-04-03 13:31:03
+ * @LastEditTime: 2023-04-04 15:11:19
  * @FilePath: /custom_form/src/components/TextField/index.vue
  * @Description: 单行文本输入框(微信扫描功能)
 -->
@@ -168,7 +168,7 @@ const validInput = () => {
   return !show_error.value;
 };
 
-defineExpose({ validInput });
+defineExpose({ validInput, id: props.item.key });
 </script>
 
 <style lang="less">

@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-08-30 11:34:19
  * @LastEditors: hookehuyr hookehuyr@gmail.com
- * @LastEditTime: 2023-04-04 11:03:21
+ * @LastEditTime: 2023-04-04 15:11:55
  * @FilePath: /custom_form/src/components/CheckboxField/index.vue
  * @Description: 多项选择控件
 -->
@@ -142,7 +142,7 @@ const validCheckbox = () => {
   return !show_error.value;
 };
 
-defineExpose({ validCheckbox });
+defineExpose({ validCheckbox, id: props.item.key });
 </script>
 
 <style lang="less">

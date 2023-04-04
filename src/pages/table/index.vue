@@ -1,7 +1,7 @@
 <!--
  * @Date: 2023-03-24 09:19:27
  * @LastEditors: hookehuyr hookehuyr@gmail.com
- * @LastEditTime: 2023-04-04 14:38:13
+ * @LastEditTime: 2023-04-04 15:38:07
  * @FilePath: /custom_form/src/pages/table/index.vue
  * @Description: 文件描述
 -->
@@ -428,6 +428,7 @@ const validOther = () => {
   let valid = {
     status: true,
     key: "",
+    id: ''
   };
   if (input.value) {
     // 单行文本
@@ -436,6 +437,7 @@ const validOther = () => {
         valid = {
           status: input.value[index].validInput(),
           key: "input",
+          id: multi_rule.value[index].id
         };
         return false;
       }
@@ -448,6 +450,7 @@ const validOther = () => {
         valid = {
           status: textarea.value[index].validTextarea(),
           key: "textarea",
+          id: multi_rule.value[index].id
         };
         return false;
       }
@@ -460,6 +463,7 @@ const validOther = () => {
         valid = {
           status: radio.value[index].validRadio(),
           key: "radio",
+          id: multi_rule.value[index].id
         };
         return false;
       }
@@ -472,6 +476,7 @@ const validOther = () => {
         valid = {
           status: checkbox.value[index].validCheckbox(),
           key: "checkbox",
+          id: multi_rule.value[index].id
         };
         return false;
       }
@@ -484,6 +489,7 @@ const validOther = () => {
         valid = {
           status: multi_rule.value[index].validMultiRule(),
           key: "multi_rule",
+          id: multi_rule.value[index].id
         };
         return false;
       }
@@ -592,7 +598,13 @@ const onSubmit = async (values) => {
       }
     }
   } else {
-    console.warn(validOther().key + "不通过验证");
+    console.warn(validOther().id + ' ' + validOther().key + "不通过验证");
+    if (validOther().id) {
+      Taro.pageScrollTo({
+        selector: `#${validOther().id}`,
+        duration: 300
+      })
+    }
     // // 图片上传控件报错提示
     // if (validOther().key === "image_uploader") {
     //   showFailToast("图片上传为空");
@@ -610,6 +622,7 @@ const onSubmit = async (values) => {
   background-color: #FAF9DC;
   min-height: calc(100vh);
   position: relative;
+  overflow: auto;
 }
 .table-title {
   padding: 30px;
