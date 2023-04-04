@@ -1,7 +1,7 @@
 <!--
  * @Date: 2023-03-24 09:19:27
  * @LastEditors: hookehuyr hookehuyr@gmail.com
- * @LastEditTime: 2023-04-04 15:55:41
+ * @LastEditTime: 2023-04-04 18:09:30
  * @FilePath: /custom_form/src/pages/table/index.vue
  * @Description: 文件描述
 -->
@@ -73,7 +73,7 @@ const ruleForm = ref(null);
 
 // // 获取表单设置
 const store = mainStore();
-const { formSetting, formInfo } = storeToRefs(store);
+const { formSetting, formInfo, callIndex } = storeToRefs(store);
 
 // web端判断封面图片高度
 const is_pc = computed(() => process.env.TARO_ENV === 'h5' && wxInfo().isPC);
@@ -188,6 +188,15 @@ const onSubmitPwd = async () => {
 }
 
 onMounted(async () => {
+  // 检查是否从首页跳转
+  if (!callIndex.value) {
+    // 翻状态
+    store.changeCallIndex(true);
+    // 跳转index页面
+    Taro.redirectTo({
+      url: `../index/index?code=${form_code}&model=${model}`
+    })
+  }
   // TAG: 全局背景色
   // $('body').css('background-color', styleColor.backgroundColor)
   const { data } = await queryFormAPI({ form_code });

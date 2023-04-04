@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-04-18 15:59:42
  * @LastEditors: hookehuyr hookehuyr@gmail.com
- * @LastEditTime: 2023-03-24 14:04:54
+ * @LastEditTime: 2023-04-04 18:07:56
  * @FilePath: /custom_form/src/stores/index.js
  * @Description: 文件描述
  */
@@ -12,13 +12,14 @@ export const mainStore = defineStore('main', {
   state: () => {
     return {
       fieldName: '',
+      callIndex: false, // 是否访问过index页面
       formInfo: {}, // 表单字段信息
       formSetting: {}, // 表单数据收集设置
       successInfo: {}, // 表单提交返回值
-    };
+    }
   },
   getters: {
-    getKeepPages () {
+    getKeepPages() {
       return this.keepPages
     },
     // getTestStoreList () {
@@ -26,17 +27,20 @@ export const mainStore = defineStore('main', {
     // }
   },
   actions: {
-    changeFieldName (v) {
-      this.fieldName = v;
+    changeFieldName(v) {
+      this.fieldName = v
     },
-    changeFormInfo (v) {
-      this.formInfo = v;
+    changeCallIndex(v) {
+      this.callIndex = v
     },
-    changeFormSetting (v) {
-      this.formSetting = v;
+    changeFormInfo(v) {
+      this.formInfo = v
     },
-    changeSuccessInfo (v) {
-      this.successInfo = v;
+    changeFormSetting(v) {
+      this.formSetting = v
+    },
+    changeSuccessInfo(v) {
+      this.successInfo = v
     },
   },
-});
+})
