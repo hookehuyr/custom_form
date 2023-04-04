@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-08-30 11:34:19
  * @LastEditors: hookehuyr hookehuyr@gmail.com
- * @LastEditTime: 2023-04-03 17:13:20
+ * @LastEditTime: 2023-04-04 14:58:27
  * @FilePath: /custom_form/src/components/RadioField/index.vue
  * @Description: 单项选择控件
 -->
@@ -16,7 +16,7 @@
       style="width: 100%">
       <div v-for="x in item.component_props.options" :key="x.value" class="radio-wrapper">
         <nut-radio :label="x.value" icon-size="16" style="margin-bottom: 0.25rem">{{ x.title }}</nut-radio>
-        <div v-if="x.desc_text" class="van-multi-ellipsis--l3 rule-desc-text">{{ x.desc_text }}</div>
+        <div v-if="x.desc_text" class="multi-ellipsis--l3 rule-desc-text">{{ x.desc_text }}</div>
         <div v-if="x.desc_type === 'text'" class="rule-box" @click="showRule(x)">
           {{ x.desc_btn_name }}&nbsp;>>
         </div>
@@ -36,7 +36,7 @@
     <nut-overlay v-model:visible="show" :lock-scroll="true">
       <div class="rule-wrapper">
         <div class="rule-block">
-          <div style="height: 70vh; min-height: 70vh; overflow: scroll; white-space: pre-wrap; line-height: 1.5;" v-html="rule_content"></div>
+          <div style="height: 70vh; min-height: 70vh; overflow: scroll; white-space: pre-wrap; line-height: 1.5;font-size: 15px;" v-html="rule_content"></div>
           <div class="close-btn">
             <nut-button type="primary" block @click="closeRule"
               >关&nbsp;&nbsp;闭</nut-button
@@ -183,7 +183,6 @@ defineExpose({ validRadio });
     border-radius: 0.25rem;
     padding: 25px;
     margin: 25px;
-    margin-top: 0;
   }
   .affix-input {
     border: 1px solid #eaeaea;
