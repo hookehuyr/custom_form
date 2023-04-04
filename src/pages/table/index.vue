@@ -1,7 +1,7 @@
 <!--
  * @Date: 2023-03-24 09:19:27
  * @LastEditors: hookehuyr hookehuyr@gmail.com
- * @LastEditTime: 2023-04-03 16:52:30
+ * @LastEditTime: 2023-04-04 10:21:43
  * @FilePath: /custom_form/src/pages/table/index.vue
  * @Description: 文件描述
 -->
@@ -63,7 +63,7 @@ import { storeToRefs } from 'pinia'
 import { mainStore } from '@/stores'
 import { queryFormAPI, postVerifyPasswordAPI } from "@/api/form.js";
 import { addFormDataAPI } from "@/api/data.js";
-import { wxInfo, getUrlParams } from "@/utils/tools";
+import { wxInfo, getUrlParams, deepClone } from "@/utils/tools";
 import { styleColor } from "@/constant.js";
 import { sharePage } from '@/composables/useShare.js'
 // 初始化WX环境
@@ -129,6 +129,7 @@ const formatData = (data) => {
 const input = ref([]);
 const textarea = ref([]);
 const radio = ref([]);
+const checkbox = ref([]);
 const area_picker = ref([]);
 const image_uploader = ref([]);
 const file_uploader = ref([]);
@@ -145,6 +146,9 @@ const setRefMap = (el, item) => {
     }
     if (item.component_props.tag === "radio") {
       radio.value.push(el);
+    }
+    if (item.component_props.tag === "checkbox") {
+      checkbox.value.push(el);
     }
     if (item.component_props.tag === "area_picker") {
       area_picker.value.push(el);
@@ -378,6 +382,17 @@ const onActive = (item) => {
   if (item.type === "radio") { // 单选控件
     postData.value = Object.assign(postData.value, { [item.key]: item.affix ? item.affix : item.value });
   }
+  if (item.type === "checkbox") { // 多选控件
+    const checkbox_value = deepClone(item.value)
+    checkbox_value.forEach((element, index) => {
+      for (const key in item.affix) {
+        if (item.affix[key] && element === key) {
+          checkbox_value[index] = item.affix[key]
+        }
+      }
+    });
+    postData.value = Object.assign(postData.value, { [item.key]: checkbox_value });
+  }
   if (item.key === "area_picker") {
     postData.value[item.filed_name] = item.value;
   }
@@ -395,17 +410,6 @@ const onActive = (item) => {
   }
   if (item.type === "picker") { // 下拉框控件
     postData.value = _.assign(postData.value, { [item.key]: item.value });
-  }
-  if (item.type === "checkbox") { // 多选控件
-    const checkbox_value = _.cloneDeep(item.value)
-    checkbox_value.forEach((element, index) => {
-      for (const key in item.affix) {
-        if (item.affix[key] && element === key) {
-          checkbox_value[index] = item.affix[key]
-        }
-      }
-    });
-    postData.value = _.assign(postData.value, { [item.key]: checkbox_value });
   }
   // 检查规则，会影响字段显示
   checkRules();
@@ -448,6 +452,18 @@ const validOther = () => {
         valid = {
           status: radio.value[index].validRadio(),
           key: "radio",
+        };
+        return false;
+      }
+    });
+  }
+  if (checkbox.value) {
+    // 单选框
+    checkbox.value.forEach((item, index) => {
+      if (!checkbox.value[index].validCheckbox()) {
+        valid = {
+          status: checkbox.value[index].validCheckbox(),
+          key: "checkbox",
         };
         return false;
       }

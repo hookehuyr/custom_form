@@ -27,6 +27,8 @@ declare module '@vue/runtime-core' {
     NoteField: typeof import('./src/components/NoteField/index.vue')['default']
     NumberField: typeof import('./src/components/NumberField/index.vue')['default']
     NutButton: typeof import('@nutui/nutui-taro')['Button']
+    NutCheckbox: typeof import('@nutui/nutui-taro')['Checkbox']
+    NutCheckboxGroup: typeof import('@nutui/nutui-taro')['CheckboxGroup']
     NutConfigProvider: typeof import('@nutui/nutui-taro')['ConfigProvider']
     NutDialog: typeof import('@nutui/nutui-taro')['Dialog']
     NutField: typeof import('@nutui/nutui-taro')['Field']
