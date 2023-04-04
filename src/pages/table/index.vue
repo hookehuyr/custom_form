@@ -1,7 +1,7 @@
 <!--
  * @Date: 2023-03-24 09:19:27
  * @LastEditors: hookehuyr hookehuyr@gmail.com
- * @LastEditTime: 2023-04-04 15:54:24
+ * @LastEditTime: 2023-04-04 15:55:41
  * @FilePath: /custom_form/src/pages/table/index.vue
  * @Description: 文件描述
 -->
@@ -599,6 +599,7 @@ const onSubmit = async (values) => {
     }
   } else {
     console.warn(validOther().id + ' ' + validOther().key + "不通过验证");
+    // 校验错误滚动到相应输入项
     if (validOther().id) {
       Taro.pageScrollTo({
         selector: `#${validOther().id}`,
