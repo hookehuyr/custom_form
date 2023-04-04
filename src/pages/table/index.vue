@@ -1,7 +1,7 @@
 <!--
  * @Date: 2023-03-24 09:19:27
  * @LastEditors: hookehuyr hookehuyr@gmail.com
- * @LastEditTime: 2023-04-04 10:21:43
+ * @LastEditTime: 2023-04-04 14:38:13
  * @FilePath: /custom_form/src/pages/table/index.vue
  * @Description: 文件描述
 -->
@@ -130,6 +130,7 @@ const input = ref([]);
 const textarea = ref([]);
 const radio = ref([]);
 const checkbox = ref([]);
+const multi_rule = ref([]);
 const area_picker = ref([]);
 const image_uploader = ref([]);
 const file_uploader = ref([]);
@@ -149,6 +150,9 @@ const setRefMap = (el, item) => {
     }
     if (item.component_props.tag === "checkbox") {
       checkbox.value.push(el);
+    }
+    if (item.component_props.tag === "multi_rule") {
+      multi_rule.value.push(el);
     }
     if (item.component_props.tag === "area_picker") {
       area_picker.value.push(el);
@@ -393,6 +397,10 @@ const onActive = (item) => {
     });
     postData.value = Object.assign(postData.value, { [item.key]: checkbox_value });
   }
+  if (item.type === "multi_rule") {
+    const checkbox_value = deepClone(item.value)
+    postData.value = Object.assign(postData.value, { [item.key]: checkbox_value });
+  }
   if (item.key === "area_picker") {
     postData.value[item.filed_name] = item.value;
   }
@@ -464,6 +472,18 @@ const validOther = () => {
         valid = {
           status: checkbox.value[index].validCheckbox(),
           key: "checkbox",
+        };
+        return false;
+      }
+    });
+  }
+  if (multi_rule.value) {
+    // 多选规则控件
+    multi_rule.value.forEach((item, index) => {
+      if (!multi_rule.value[index].validMultiRule()) {
+        valid = {
+          status: multi_rule.value[index].validMultiRule(),
+          key: "multi_rule",
         };
         return false;
       }
