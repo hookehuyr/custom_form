@@ -35,6 +35,7 @@ declare module '@vue/runtime-core' {
     NutFormItem: typeof import('@nutui/nutui-taro')['FormItem']
     NutInput: typeof import('@nutui/nutui-taro')['Input']
     NutNoticebar: typeof import('@nutui/nutui-taro')['Noticebar']
+    NutNumberKeyboard: typeof import('@nutui/nutui-taro')['NumberKeyboard']
     NutOverlay: typeof import('@nutui/nutui-taro')['Overlay']
     NutPicker: typeof import('@nutui/nutui-taro')['Picker']
     NutPopup: typeof import('@nutui/nutui-taro')['Popup']

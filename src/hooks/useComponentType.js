@@ -16,7 +16,7 @@ import PickerField from '@/components/PickerField/index.vue'
 // import RatePickerField from '@/components/RatePickerField/index.vue'
 // import CalendarField from '@/components/CalendarField/index.vue'
 // import IdentityField from '@/components/IdentityField/index.vue'
-// import NumberField from '@/components/NumberField/index.vue'
+import NumberField from '@/components/NumberField/index.vue'
 // import DesField from '@/components/DesField/index.vue'
 // import DividerField from '@/components/DividerField/index.vue'
 // import VideoField from '@/components/VideoField/index.vue'
@@ -80,10 +80,10 @@ export function createComponentType(data) {
       item.name = item.key
       item.component = TextareaField
     }
-    // if (item.component_props.tag === 'number') {
-    //   item.name = item.key
-    //   item.component = NumberField
-    // }
+    if (item.component_props.tag === 'number') {
+      item.name = item.key
+      item.component = NumberField
+    }
     if (item.component_props.tag === 'radio') {
       item.component = RadioField
     }

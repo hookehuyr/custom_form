@@ -1,7 +1,7 @@
 <!--
  * @Date: 2023-03-24 09:19:27
  * @LastEditors: hookehuyr hookehuyr@gmail.com
- * @LastEditTime: 2023-04-06 13:37:04
+ * @LastEditTime: 2023-04-06 14:35:26
  * @FilePath: /custom_form/src/pages/table/index.vue
  * @Description: 文件描述
 -->
@@ -132,6 +132,7 @@ const radio = ref([]);
 const checkbox = ref([]);
 const multi_rule = ref([]);
 const picker = ref([]);
+const number = ref([]);
 const area_picker = ref([]);
 const image_uploader = ref([]);
 const file_uploader = ref([]);
@@ -157,6 +158,9 @@ const setRefMap = (el, item) => {
     }
     if (item.component_props.tag === "select") {
       picker.value.push(el);
+    }
+    if (item.component_props.tag === "number") {
+      number.value.push(el);
     }
     if (item.component_props.tag === "area_picker") {
       area_picker.value.push(el);
@@ -417,6 +421,9 @@ const onActive = (item) => {
   if (item.key === "area_picker") {
     postData.value[item.filed_name] = item.value;
   }
+  if (item.key === "number") {
+    postData.value[item.filed_name] = item.value;
+  }
   if (item.key === "image_uploader") {
     postData.value[item.filed_name] = item.value;
   }
@@ -516,6 +523,19 @@ const validOther = () => {
           status: picker.value[index].validPicker(),
           key: "picker",
           id: picker.value[index]?.id
+        };
+        return false;
+      }
+    });
+  }
+  if (number.value) {
+    // 下拉框
+    number.value.forEach((item, index) => {
+      if (!number.value[index].validNumber()) {
+        valid = {
+          status: number.value[index].validNumber(),
+          key: "number",
+          id: number.value[index]?.id
         };
         return false;
       }
