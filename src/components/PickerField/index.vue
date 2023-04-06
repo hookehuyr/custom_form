@@ -1,39 +1,52 @@
 <!--
  * @Date: 2022-08-30 13:46:51
  * @LastEditors: hookehuyr hookehuyr@gmail.com
- * @LastEditTime: 2023-03-03 21:11:24
- * @FilePath: /data-table/src/components/PickerField/index.vue
+ * @LastEditTime: 2023-04-06 13:34:46
+ * @FilePath: /custom_form/src/components/PickerField/index.vue
  * @Description: 单列选择器组件
 -->
 <template>
   <div v-if="HideShow" class="picker-field-page">
     <div class="label">
-      <span v-if="item.component_props.required">&nbsp;*</span>
+      <text v-if="item.component_props.required">&nbsp;*</text>
       {{ item.component_props.label }}
     </div>
-    <van-field
-      v-model="picker_value"
-      is-link
-      readonly
-      :name="item.key"
-      :required="item.component_props.required"
-      :placeholder="item.component_props.placeholder"
-      :rules="item.rules"
-      @click="showPicker = true"
-      :border="false"
-    />
+    <div style="margin: 10px 20px;">
+      <nut-input
+        v-model="picker_value"
+        is-link
+        readonly
+        :label="item.key"
+        :required="item.component_props.required"
+        :placeholder="item.component_props.placeholder"
+        @click-input="onClick()"
+        :border="false"
+        style="padding: 0px;"
+      >
+        <template #right> <RectRight color="#eaeaea"></RectRight></template>
+      </nut-input>
+      <div
+        v-if="show_error"
+        style="padding: 5px; color: red; font-size: 12px;"
+      >
+        {{ error_msg }}
+      </div>
+    </div>
     <!-- <van-field v-if="has_add_info" :name="add_info_name" v-model="add_info" label="" placeholder="请输入补充信息" :border="false" style="border: 1px solid #eaeaea;border-radius: 0.25rem; padding: 0.25rem 0.5rem; margin-top: 0.25rem;" /> -->
-    <van-popup v-model:show="showPicker" position="bottom">
-      <van-picker
+    <nut-popup v-model:visible="showPicker" position="bottom">
+      <nut-picker
         :columns="item.component_props.options"
         @confirm="onConfirm"
         @cancel="showPicker = false"
       />
-    </van-popup>
+    </nut-popup>
   </div>
 </template>
 
 <script setup>
+import { ref, computed, watch, onMounted, reactive } from "vue";
+import { RectRight } from '@nutui/icons-vue-taro';
+
 const props = defineProps({
   item: Object,
 });
@@ -59,12 +72,21 @@ const selectedValues = ref("");
 const showPicker = ref(false);
 const picker_value = ref(props.item.component_props.default);
 
+const onClick = () => {
+  showPicker.value = true;
+}
+
 const onConfirm = ({ selectedOptions }) => {
   picker_value.value = selectedOptions[0]?.value;
   showPicker.value = false;
   // 触发点自定义监听事件，配合规则显示隐藏其他字段
-  props.item.value = { key: props.item.key, value: picker_value.value, type: "picker" };
+  props.item.value = {
+    key: "picker",
+    filed_name: props.item.key,
+    value: picker_value.value,
+  };
   emit("active", props.item.value);
+  validPicker();
   // if (add_info_key.value === props.item.value) {
   //   has_add_info.value = true;
   // }
@@ -73,26 +95,58 @@ const onConfirm = ({ selectedOptions }) => {
 const HideShow = computed(() => {
   return !props.item.component_props.disabled
 })
+
+// 错误提示
+const show_error = ref(false);
+const error_msg = ref('');
+
+// 校验模块
+const validPicker = () => {
+  // 必填项
+  if (props.item.component_props.required && !picker_value.value) {
+    show_error.value = true;
+    error_msg.value = '必填项不能为空'
+  } else {
+    show_error.value = false;
+    error_msg.value = ''
+  }
+  return !show_error.value;
+};
+
+defineExpose({ validPicker, id: props.item.key });
 </script>
 
-<style lang="less" scoped>
+<style lang="less">
 .picker-field-page {
-  margin: 1rem;
   .label {
-    // padding: 1rem 1rem 0 0;
-    font-size: 0.9rem;
+    padding: 30px 30px 0 30px;
+    font-size: 26px;
     font-weight: bold;
-
-    span {
+    text {
       color: red;
     }
+
+    .note-wrapper {
+      font-size: 24px;
+      margin-left: 30px;
+      color: gray;
+      padding-bottom: 15px;
+      padding-top: 7px;
+      white-space: pre-wrap;
+    }
+  }
+
+  .nut-input {
+    padding: 10px;
+    border: 1px solid #eaeaea;
+    border-radius: 8px;
   }
 }
 
-:deep(.van-cell--clickable) {
-  border: 1px solid #eaeaea;
-  border-radius: 0.25rem;
-  padding: 0.25rem 0.5rem;
-  margin-top: 0.5rem;
-}
+// :deep(.van-cell--clickable) {
+//   border: 1px solid #eaeaea;
+//   border-radius: 0.25rem;
+//   padding: 0.25rem 0.5rem;
+//   margin-top: 0.5rem;
+// }
 </style>
