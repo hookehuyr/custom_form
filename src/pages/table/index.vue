@@ -1,7 +1,7 @@
 <!--
  * @Date: 2023-03-24 09:19:27
  * @LastEditors: hookehuyr hookehuyr@gmail.com
- * @LastEditTime: 2023-04-06 14:35:26
+ * @LastEditTime: 2023-04-06 16:38:28
  * @FilePath: /custom_form/src/pages/table/index.vue
  * @Description: 文件描述
 -->
@@ -133,6 +133,7 @@ const checkbox = ref([]);
 const multi_rule = ref([]);
 const picker = ref([]);
 const number = ref([]);
+const phone = ref([]);
 const area_picker = ref([]);
 const image_uploader = ref([]);
 const file_uploader = ref([]);
@@ -161,6 +162,9 @@ const setRefMap = (el, item) => {
     }
     if (item.component_props.tag === "number") {
       number.value.push(el);
+    }
+    if (item.component_props.tag === "phone") {
+      phone.value.push(el);
     }
     if (item.component_props.tag === "area_picker") {
       area_picker.value.push(el);
@@ -424,6 +428,9 @@ const onActive = (item) => {
   if (item.key === "number") {
     postData.value[item.filed_name] = item.value;
   }
+  if (item.key === "phone") {
+    postData.value[item.filed_name] = item.value;
+  }
   if (item.key === "image_uploader") {
     postData.value[item.filed_name] = item.value;
   }
@@ -536,6 +543,19 @@ const validOther = () => {
           status: number.value[index].validNumber(),
           key: "number",
           id: number.value[index]?.id
+        };
+        return false;
+      }
+    });
+  }
+  if (phone.value) {
+    // 手机号
+    phone.value.forEach((item, index) => {
+      if (!phone.value[index].validPhone()) {
+        valid = {
+          status: phone.value[index].validPhone(),
+          key: "phone",
+          id: phone.value[index]?.id
         };
         return false;
       }
