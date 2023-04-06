@@ -1,7 +1,7 @@
 <!--
  * @Date: 2023-03-24 09:19:27
  * @LastEditors: hookehuyr hookehuyr@gmail.com
- * @LastEditTime: 2023-04-06 16:38:28
+ * @LastEditTime: 2023-04-06 17:14:16
  * @FilePath: /custom_form/src/pages/table/index.vue
  * @Description: 文件描述
 -->
@@ -134,6 +134,7 @@ const multi_rule = ref([]);
 const picker = ref([]);
 const number = ref([]);
 const phone = ref([]);
+const email = ref([]);
 const area_picker = ref([]);
 const image_uploader = ref([]);
 const file_uploader = ref([]);
@@ -165,6 +166,9 @@ const setRefMap = (el, item) => {
     }
     if (item.component_props.tag === "phone") {
       phone.value.push(el);
+    }
+    if (item.component_props.tag === "email") {
+      email.value.push(el);
     }
     if (item.component_props.tag === "area_picker") {
       area_picker.value.push(el);
@@ -431,6 +435,9 @@ const onActive = (item) => {
   if (item.key === "phone") {
     postData.value[item.filed_name] = item.value;
   }
+  if (item.key === "email") {
+    postData.value[item.filed_name] = item.value;
+  }
   if (item.key === "image_uploader") {
     postData.value[item.filed_name] = item.value;
   }
@@ -556,6 +563,19 @@ const validOther = () => {
           status: phone.value[index].validPhone(),
           key: "phone",
           id: phone.value[index]?.id
+        };
+        return false;
+      }
+    });
+  }
+  if (email.value) {
+    // 邮箱
+    email.value.forEach((item, index) => {
+      if (!email.value[index].validEmail()) {
+        valid = {
+          status: email.value[index].validEmail(),
+          key: "email",
+          id: email.value[index]?.id
         };
         return false;
       }
