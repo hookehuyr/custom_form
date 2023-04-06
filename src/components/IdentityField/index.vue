@@ -1,8 +1,8 @@
 <!--
  * @Date: 2022-09-14 14:44:30
  * @LastEditors: hookehuyr hookehuyr@gmail.com
- * @LastEditTime: 2023-02-01 15:07:15
- * @FilePath: /data-table/src/components/IdentityField/index.vue
+ * @LastEditTime: 2023-04-06 10:16:18
+ * @FilePath: /custom_form/src/components/IdentityField/index.vue
  * @Description: 身份证输入控件
 -->
 <template>
@@ -12,30 +12,14 @@
       {{ item.component_props.label }}
     </div>
     <!-- <div v-if="item.component_props.readonly" style="padding: 0.5rem 1rem;">{{ item.value }}</div> -->
-    <van-field
-      v-model="item.value"
-      :id="item.name"
-      :name="item.name"
-      :placeholder="item.component_props.placeholder"
-      :rules="rules"
-      :required="item.component_props.required"
-      :disabled="item.component_props.readonly"
-      readonly
-      @touchstart.stop="openKeyboard($event)"
-      :border="false"
-    >
+    <van-field ref="fieldRef" v-model="item.value" :id="item.name" :name="item.name"
+      :placeholder="item.component_props.placeholder" :rules="rules" :required="item.component_props.required"
+      :disabled="item.component_props.readonly" :readonly="!edit_mode" right-icon="edit"
+      @click-right-icon="clickRightIcon" @touchstart.stop="openKeyboard($event)" :border="false">
     </van-field>
     <!-- <div v-if="gender" class="gender"><span>性别：</span>{{ gender }}</div> -->
-    <van-number-keyboard
-      v-model="item.value"
-      :show="show"
-      extra-key="X"
-      close-button-text="完成"
-      @blur="blurKeyboard()"
-      @input="onInput"
-      @delete="onDelete"
-      safe-area-inset-bottom
-    />
+    <van-number-keyboard v-model="item.value" :show="show" extra-key="X" close-button-text="完成" @blur="blurKeyboard()"
+      @input="onInput" @delete="onDelete" safe-area-inset-bottom />
   </div>
 </template>
 
@@ -43,6 +27,7 @@
 import $ from "jquery";
 import { storeToRefs, mainStore } from "@/utils/generatePackage";
 import { showSuccessToast, showFailToast } from "vant";
+
 
 const props = defineProps({
   item: Object,
@@ -71,8 +56,16 @@ watch(
   }
 );
 const readonly = props.item.component_props.readonly;
+const fieldRef = ref(null);
+const edit_mode = ref(false);
+const clickRightIcon = () => { // 编辑模式
+  edit_mode.value = true;
+  nextTick(() => {
+    fieldRef.value?.focus();
+  })
+}
 const openKeyboard = (e) => {
-  if (readonly) return false; // 如果为只读，不能设置
+  if (readonly || e.target.className.indexOf('edit') > 0 || edit_mode.value) return false; // 如果为只读或者编辑模式，不能设置
   // // 键盘上移动
   // const target_to_view_height = window.innerHeight - e.target.getBoundingClientRect().y; // 元素到适口高度
   // const target_top = document.body.scrollHeight - $(e.target).offset().top; // 元素到正文高度
@@ -143,8 +136,8 @@ const validatorMessage = (val, rule) => {
 };
 const rules = [{ validator, message: validatorMessage }];
 
-const onInput = (value) => {};
-const onDelete = () => {};
+const onInput = (value) => { };
+const onDelete = () => { };
 
 const gender = ref('');
 
@@ -178,13 +171,16 @@ const getGenderByIdNumber = (idNumber) => {
     padding: 1rem 1rem 0 1rem;
     font-size: 0.9rem;
     font-weight: bold;
+
     span {
       color: red;
     }
   }
+
   .gender {
     padding: 0 1rem 0 1rem;
     font-size: 0.9rem;
+
     span {
       font-weight: bold;
     }
