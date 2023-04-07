@@ -2278,6 +2278,11 @@
     "@typescript-eslint/types" "5.56.0"
     eslint-visitor-keys "^3.3.0"
 
+"@vant/area-data@^1.4.1":
+  version "1.4.1"
+  resolved "https://mirrors.cloud.tencent.com/npm/@vant/area-data/-/area-data-1.4.1.tgz#b4f1bce05dbb147dc08fd2ed9b2a0f63d3329b29"
+  integrity sha512-D8zI/rfxREhnIKGoYzsEJZ73fte4JARhFeFftLIH7ynu1sPrCBEgPkLEbwPyvw3VC4JdSIuzaK5uOhu+BcoPXw==
+
 "@vue/babel-helper-vue-transform-on@^1.0.2":
   version "1.0.2"
   resolved "https://mirrors.cloud.tencent.com/npm/@vue/babel-helper-vue-transform-on/-/babel-helper-vue-transform-on-1.0.2.tgz#9b9c691cd06fc855221a2475c3cc831d774bc7dc"

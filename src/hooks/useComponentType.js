@@ -4,7 +4,7 @@ import TextareaField from '@/components/TextareaField/index.vue'
 import RadioField from '@/components/RadioField/index.vue'
 import CheckboxField from '@/components/CheckboxField/index.vue'
 import PickerField from '@/components/PickerField/index.vue'
-// import AreaPickerField from '@/components/AreaPickerField/index.vue'
+import AreaPickerField from '@/components/AreaPickerField/index.vue'
 // import DatePickerField from '@/components/DatePickerField/index.vue'
 // import TimePickerField from '@/components/TimePickerField/index.vue'
 // import DateTimePickerField from '@/components/DateTimePickerField/index.vue'
@@ -93,9 +93,9 @@ export function createComponentType(data) {
     if (item.component_props.tag === 'select') {
       item.component = PickerField
     }
-    // if (item.component_props.tag === 'address') {
-    //   item.component = AreaPickerField
-    // }
+    if (item.component_props.tag === 'address') {
+      item.component = AreaPickerField
+    }
     // if (item.component_props.tag === 'date') {
     //   item.component = DatePickerField
     // }
