@@ -5,7 +5,7 @@ import RadioField from '@/components/RadioField/index.vue'
 import CheckboxField from '@/components/CheckboxField/index.vue'
 import PickerField from '@/components/PickerField/index.vue'
 import AreaPickerField from '@/components/AreaPickerField/index.vue'
-// import DatePickerField from '@/components/DatePickerField/index.vue'
+import DatePickerField from '@/components/DatePickerField/index.vue'
 // import TimePickerField from '@/components/TimePickerField/index.vue'
 // import DateTimePickerField from '@/components/DateTimePickerField/index.vue'
 // import ImageUploaderField from '@/components/ImageUploaderField/index.vue'
@@ -60,7 +60,7 @@ import MultiRuleField from '@/components/MultiRuleField/index.vue'
  */
 export function createComponentType(data) {
   // 判断类型和使用组件
-  _.each(data, (item, index) => {
+  _.each(data, (item) => {
     // 必填项规则添加
     if (item.component_props.required) {
       item.rules = [
@@ -96,9 +96,9 @@ export function createComponentType(data) {
     if (item.component_props.tag === 'address') {
       item.component = AreaPickerField
     }
-    // if (item.component_props.tag === 'date') {
-    //   item.component = DatePickerField
-    // }
+    if (item.component_props.tag === 'date') {
+      item.component = DatePickerField
+    }
     // if (item.component_props.tag === 'time') {
     //   item.component = TimePickerField
     // }

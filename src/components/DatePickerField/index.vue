@@ -1,55 +1,59 @@
 <!--
  * @Date: 2022-08-31 11:45:30
  * @LastEditors: hookehuyr hookehuyr@gmail.com
- * @LastEditTime: 2023-02-10 10:07:31
- * @FilePath: /data-table/src/components/DatePickerField/index.vue
+ * @LastEditTime: 2023-04-07 15:51:31
+ * @FilePath: /custom_form/src/components/DatePickerField/index.vue
  * @Description: 日期选择组件
 -->
 <template>
   <div v-if="HideShow" class="date-picker-field">
     <div class="label">
-      <span v-if="item.component_props.required">&nbsp;*</span>
+      <text v-if="item.component_props.required">&nbsp;*</text>
       {{ item.component_props.label }}
     </div>
-    <van-field
-      v-model="item.value"
-      is-link
-      readonly
-      :name="item.key"
-      :required="item.component_props.required"
-      :disabled="item.component_props.readonly"
-      :placeholder="item.component_props.placeholder ? item.component_props.placeholder : '请选择日期'"
-      :rules="rules"
-      @click="onTap"
-      :border="false"
-    />
-    <van-popup v-model:show="showPicker" position="bottom">
-      <van-date-picker
+    <nut-cell desc-text-align="left" :desc="popupDesc" @click="onTap" is-link  style="border: 1px solid #eaeaea; border-radius: 0.25rem; padding: 0.25rem 0.5rem;"></nut-cell>
+    <div
+      v-if="show_error"
+      style="padding: 5px; color: red; font-size: 12px;"
+    >
+      {{ error_msg }}
+    </div>
+    <nut-popup position="bottom" v-model:visible="showPicker">
+      <nut-date-picker
         v-model="currentDate"
         title="日期选择"
+        :type="columns_type"
         :min-date="minDate"
         :max-date="maxDate"
-        :columns-type="columns_type"
         @confirm="onConfirm"
         @cancel="showPicker = false"
-      />
-    </van-popup>
+        :is-show-chinese="true"
+      >
+      </nut-date-picker>
+    </nut-popup>
   </div>
 </template>
 
 <script setup>
+import { ref, computed, watch, onMounted, reactive } from "vue";
 import dayjs from "dayjs";
 
 const props = defineProps({
   item: Object,
 });
 
+const emit = defineEmits(["active"]);
+
 // 隐藏显示
 const HideShow = computed(() => {
   return !props.item.component_props.disabled
 })
+
 const showPicker = ref(false);
-const currentDate = ref([]);
+const popupDesc = ref('请选择');
+let minDate = new Date(2020, 0, 1);
+let maxDate = new Date(2035, 10, 1);
+const currentDate = ref('');
 const readonly = props.item.component_props.readonly;
 
 const onTap = () => {
@@ -57,113 +61,98 @@ const onTap = () => {
   showPicker.value = true
 }
 const onConfirm = ({ selectedValues, selectedOptions }) => {
-  props.item.value = selectedValues.join("-");
+  popupDesc.value = selectedOptions.map((val) => val.value).join('-');
+  props.item.value = {
+    key: "date",
+    filed_name: props.item.key,
+    value: selectedOptions.map((val) => val.value).join('-'),
+  };
+  emit("active", props.item.value);
   showPicker.value = false;
+  validDate()
 };
 
-const columns_type = ref([]);
+const columns_type = ref('date');
 const date_format = props.item.component_props.data_dateformat; // YYYY-MM=年月，YYYY-MM-DD=年月日
-// 数字前面补位
-const formatZero = (num, len) => {
-  if (String(num).length > len) {
-    return num;
-  }
-  return (Array(len).join(0) + num).slice(-len)
-}
-
-const minDate = ref()
-const maxDate = ref()
 
 onMounted(() => {
   // 根据默认值时间调整显示
-  currentDate.value = props.item.component_props.default ? props.item.component_props.default.split("-") : props.item.value.split("-");
-  let Year = '';
-  let Month = '';
-  let Day = '';
-  if (!props.item.component_props.default) {
-    Year = String(dayjs().year());
-    Month = formatZero(dayjs().month(), 2);
-    Day = formatZero(dayjs().date(), 2);
-  } else {
-    Year = currentDate.value[0];
-    Month = formatZero(currentDate.value[1], 2);
-    Day = formatZero(currentDate.value[2], 2);
-  }
+  currentDate.value = new Date(props.item.component_props.default);
   switch (date_format) {
     case "YYYY-MM":
-      columns_type.value = ['year', 'month']
-      // 设置默认值
-      currentDate.value = [Year, Month];
+      columns_type.value = 'year-month'
       break;
     case "YYYY-MM-DD":
-      columns_type.value = ['year', 'month', 'day']
-      // 设置默认值
-      currentDate.value = [Year, Month, Day];
+      columns_type.value = 'date'
       break;
   }
   // 设置默认最大最小日期
-  if (data_minvalue.length) {
-    const min = data_minvalue.split("-")
-    minDate.value = new Date(+min[0], +min[1] - 1, +min[2])
+  if (data_minvalue) {
+    const min = data_minvalue.split("-");
+    minDate = new Date(+min[0], +min[1] - 1, +min[2])
   }
-  if (data_maxvalue.length) {
+  if (data_maxvalue) {
     const max = data_maxvalue.split("-")
-    maxDate.value = new Date(+max[0], +max[1] - 1, +max[2])
+    maxDate = new Date(+max[0], +max[1] - 1, +max[2])
   }
 });
 
 const required = props.item.component_props.required;
 const data_minvalue = props.item.component_props.data_minvalue;
 const data_maxvalue = props.item.component_props.data_maxvalue;
-const validator = (val) => {
-  if (required && !val) {
-    return false;
-  } else if (val && data_minvalue && val < data_minvalue) {
-    return false;
-  } else if (val && data_maxvalue && val > data_maxvalue) {
-    return false;
+// 错误提示
+const show_error = ref(false);
+const error_msg = ref('');
+// 校验模块
+const validDate = () => {
+  // 必填项
+  if (required && !popupDesc.value) {
+    show_error.value = true;
+    error_msg.value = '必填项不能为空'
+  } else if (required && popupDesc.value && data_minvalue && popupDesc.value < data_minvalue) {
+    show_error.value = true;
+    error_msg.value = "最小可选：" + data_minvalue;
+  } else if (required && popupDesc.value && data_maxvalue && popupDesc.value > data_maxvalue) {
+    show_error.value = true;
+    error_msg.value = "最大可选：" + data_maxvalue;
   } else {
-    return true;
+    show_error.value = false;
+    error_msg.value = ''
   }
+  return !show_error.value;
 };
-// 错误提示文案
-const validatorMessage = (val, rule) => {
-  if (required && !val) {
-    return "必填项不能为空";
-  } else if (val && data_minvalue && val < data_minvalue) {
-    return "最小可选：" + data_minvalue;
-  } else if (val && data_maxvalue && val > data_maxvalue) {
-    return "最大可选：" + data_maxvalue;
-  }
-};
-const rules = [{ validator, message: validatorMessage }];
+
+defineExpose({ validDate, id: props.item.key });
 </script>
 
-<style lang="less" scoped>
+<style lang="less">
 .date-picker-field {
   margin: 1rem;
   .label {
-    // padding: 1rem 1rem 0 1rem;
-    font-size: 0.9rem;
+    padding-bottom: 20px;
+    font-size: 26px;
     font-weight: bold;
 
-    span {
+    text {
       color: red;
     }
   }
-  :deep(.van-icon) { // 处理正式服务器上箭头上下位移问题
-    font-size: var(--van-cell-icon-size);
-    line-height: var(--van-cell-line-height);
+  // :deep(.van-icon) { // 处理正式服务器上箭头上下位移问题
+  //   font-size: var(--van-cell-icon-size);
+  //   line-height: var(--van-cell-line-height);
+  // }
+  .nut-cell {
+
   }
 }
 
-:deep(.van-cell--clickable) {
-  border: 1px solid #eaeaea;
-  border-radius: 0.25rem;
-  padding: 0.25rem 0.5rem;
-  margin-top: 0.5rem;
-  input {
-    color: #323233;
-  }
-}
+// :deep(.van-cell--clickable) {
+//   border: 1px solid #eaeaea;
+//   border-radius: 0.25rem;
+//   padding: 0.25rem 0.5rem;
+//   margin-top: 0.5rem;
+//   input {
+//     color: #323233;
+//   }
+// }
 </style>
