@@ -1,7 +1,7 @@
 <!--
  * @Date: 2023-03-24 09:19:27
  * @LastEditors: hookehuyr hookehuyr@gmail.com
- * @LastEditTime: 2023-04-07 16:12:27
+ * @LastEditTime: 2023-04-07 17:26:07
  * @FilePath: /custom_form/src/pages/table/index.vue
  * @Description: 文件描述
 -->
@@ -138,6 +138,7 @@ const email = ref([]);
 const address = ref([]);
 const date = ref([]);
 const time = ref([]);
+const datetime = ref([]);
 const area_picker = ref([]);
 const image_uploader = ref([]);
 const file_uploader = ref([]);
@@ -181,6 +182,9 @@ const setRefMap = (el, item) => {
     }
     if (item.component_props.tag === "time") {
       time.value.push(el);
+    }
+    if (item.component_props.tag === "datetime") {
+      datetime.value.push(el);
     }
     if (item.component_props.tag === "area_picker") {
       area_picker.value.push(el);
@@ -459,6 +463,9 @@ const onActive = (item) => {
   if (item.key === "time") {
     postData.value[item.filed_name] = item.value;
   }
+  if (item.key === "datetime") {
+    postData.value[item.filed_name] = item.value;
+  }
   if (item.key === "image_uploader") {
     postData.value[item.filed_name] = item.value;
   }
@@ -636,6 +643,19 @@ const validOther = () => {
           status: time.value[index].validTime(),
           key: "time",
           id: time.value[index]?.id
+        };
+        return false;
+      }
+    });
+  }
+  if (datetime.value) {
+    // 日期时间选择器
+    datetime.value.forEach((item, index) => {
+      if (!datetime.value[index].validDateTime()) {
+        valid = {
+          status: datetime.value[index].validDateTime(),
+          key: "datetime",
+          id: datetime.value[index]?.id
         };
         return false;
       }
