@@ -1,7 +1,7 @@
 <!--
  * @Date: 2023-03-24 09:19:27
  * @LastEditors: hookehuyr hookehuyr@gmail.com
- * @LastEditTime: 2023-04-07 14:30:33
+ * @LastEditTime: 2023-04-07 16:12:27
  * @FilePath: /custom_form/src/pages/table/index.vue
  * @Description: 文件描述
 -->
@@ -137,6 +137,7 @@ const phone = ref([]);
 const email = ref([]);
 const address = ref([]);
 const date = ref([]);
+const time = ref([]);
 const area_picker = ref([]);
 const image_uploader = ref([]);
 const file_uploader = ref([]);
@@ -177,6 +178,9 @@ const setRefMap = (el, item) => {
     }
     if (item.component_props.tag === "date") {
       date.value.push(el);
+    }
+    if (item.component_props.tag === "time") {
+      time.value.push(el);
     }
     if (item.component_props.tag === "area_picker") {
       area_picker.value.push(el);
@@ -452,6 +456,9 @@ const onActive = (item) => {
   if (item.key === "date") {
     postData.value[item.filed_name] = item.value;
   }
+  if (item.key === "time") {
+    postData.value[item.filed_name] = item.value;
+  }
   if (item.key === "image_uploader") {
     postData.value[item.filed_name] = item.value;
   }
@@ -616,6 +623,19 @@ const validOther = () => {
           status: date.value[index].validDate(),
           key: "date",
           id: date.value[index]?.id
+        };
+        return false;
+      }
+    });
+  }
+  if (time.value) {
+    // 日期选择器
+    time.value.forEach((item, index) => {
+      if (!time.value[index].validTime()) {
+        valid = {
+          status: time.value[index].validTime(),
+          key: "time",
+          id: time.value[index]?.id
         };
         return false;
       }
