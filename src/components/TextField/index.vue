@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-08-29 14:31:20
  * @LastEditors: hookehuyr hookehuyr@gmail.com
- * @LastEditTime: 2023-04-04 15:11:19
+ * @LastEditTime: 2023-04-07 15:49:12
  * @FilePath: /custom_form/src/components/TextField/index.vue
  * @Description: 单行文本输入框(微信扫描功能)
 -->
@@ -174,7 +174,7 @@ defineExpose({ validInput, id: props.item.key });
 <style lang="less">
 .text-field-page {
   .label {
-    padding: 30px 30px 0 30px;
+    padding: 0 30px 0 45px;
     font-size: 26px;
     font-weight: bold;
 

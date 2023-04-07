@@ -1,12 +1,12 @@
 <!--
  * @Date: 2022-08-29 14:31:20
  * @LastEditors: hookehuyr hookehuyr@gmail.com
- * @LastEditTime: 2023-04-06 17:19:02
+ * @LastEditTime: 2023-04-07 15:48:50
  * @FilePath: /custom_form/src/components/EmailField/index.vue
  * @Description: 邮箱输入框
 -->
 <template>
-  <div v-if="HideShow" class="text-field-page">
+  <div v-if="HideShow" class="email-field-page">
     <div class="label">
       <text v-if="item.component_props.required">&nbsp;*</text>
       {{ item.component_props.label }}
@@ -81,7 +81,7 @@ defineExpose({ validEmail, id: props.item.key });
 </script>
 
 <style lang="less">
-.text-field-page {
+.email-field-page {
   .label {
     padding: 30px 30px 0 30px;
     font-size: 26px;
