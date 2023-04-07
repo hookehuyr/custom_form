@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-08-31 11:45:30
  * @LastEditors: hookehuyr hookehuyr@gmail.com
- * @LastEditTime: 2023-04-07 16:41:40
+ * @LastEditTime: 2023-04-07 17:21:03
  * @FilePath: /custom_form/src/components/TimePickerField/index.vue
  * @Description: 时间选择组件
 -->
@@ -87,7 +87,7 @@ const error_msg = ref('');
 // 校验模块
 const validTime = () => {
   // 必填项
-  if (required && !popupDesc.value) {
+  if (required && popupDesc.value === '请选择') {
     show_error.value = true;
     error_msg.value = '必填项不能为空'
   } else if (required && popupDesc.value && data_minvalue && popupDesc.value < data_minvalue) {

@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-08-31 11:45:30
  * @LastEditors: hookehuyr hookehuyr@gmail.com
- * @LastEditTime: 2023-04-07 16:41:59
+ * @LastEditTime: 2023-04-07 16:53:40
  * @FilePath: /custom_form/src/components/DatePickerField/index.vue
  * @Description: 日期选择组件
 -->
@@ -107,7 +107,7 @@ const error_msg = ref('');
 // 校验模块
 const validDate = () => {
   // 必填项
-  if (required && !popupDesc.value) {
+  if (required && popupDesc.value === '请选择') {
     show_error.value = true;
     error_msg.value = '必填项不能为空'
   } else if (required && popupDesc.value && data_minvalue && popupDesc.value < data_minvalue) {
