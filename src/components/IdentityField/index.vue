@@ -1,21 +1,35 @@
 <!--
  * @Date: 2022-09-14 14:44:30
  * @LastEditors: hookehuyr hookehuyr@gmail.com
- * @LastEditTime: 2023-04-06 10:16:18
+ * @LastEditTime: 2023-04-07 09:30:49
  * @FilePath: /custom_form/src/components/IdentityField/index.vue
  * @Description: 身份证输入控件
 -->
 <template>
   <div v-if="HideShow" class="identity-page">
-    <div class="label">
-      <span v-if="item.component_props.required">&nbsp;*</span>
-      {{ item.component_props.label }}
-    </div>
-    <!-- <div v-if="item.component_props.readonly" style="padding: 0.5rem 1rem;">{{ item.value }}</div> -->
+  <div class="label">
+    <span v-if="item.component_props.required">&nbsp;*</span>
+    {{ item.component_props.label }}
+  </div>
+  <!-- <div v-if="item.component_props.readonly" style="padding: 0.5rem 1rem;">{{ item.value }}</div> -->
+  <!-- <van-field
+      ref="fieldRef"
+      v-model="item.value"
+      :id="item.name"
+      :name="item.name"
+      :placeholder="item.component_props.placeholder"
+      :rules="rules"
+      :required="item.component_props.required"
+        :disabled="item.component_props.readonly"
+        :readonly="!edit_mode"
+        right-icon="edit" @click-right-icon="clickRightIcon"
+        @touchstart.stop="openKeyboard($event)"
+        :border="false"
+      >
+      </van-field> -->
     <van-field ref="fieldRef" v-model="item.value" :id="item.name" :name="item.name"
       :placeholder="item.component_props.placeholder" :rules="rules" :required="item.component_props.required"
-      :disabled="item.component_props.readonly" :readonly="!edit_mode" right-icon="edit"
-      @click-right-icon="clickRightIcon" @touchstart.stop="openKeyboard($event)" :border="false">
+      :disabled="item.component_props.readonly" :border="false">
     </van-field>
     <!-- <div v-if="gender" class="gender"><span>性别：</span>{{ gender }}</div> -->
     <van-number-keyboard v-model="item.value" :show="show" extra-key="X" close-button-text="完成" @blur="blurKeyboard()"
