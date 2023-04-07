@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-08-31 11:45:30
  * @LastEditors: hookehuyr hookehuyr@gmail.com
- * @LastEditTime: 2023-04-07 15:51:31
+ * @LastEditTime: 2023-04-07 16:41:59
  * @FilePath: /custom_form/src/components/DatePickerField/index.vue
  * @Description: 日期选择组件
 -->
@@ -50,7 +50,7 @@ const HideShow = computed(() => {
 })
 
 const showPicker = ref(false);
-const popupDesc = ref('请选择');
+const popupDesc = ref('');
 let minDate = new Date(2020, 0, 1);
 let maxDate = new Date(2035, 10, 1);
 const currentDate = ref('');
@@ -77,6 +77,7 @@ const date_format = props.item.component_props.data_dateformat; // YYYY-MM=年�
 
 onMounted(() => {
   // 根据默认值时间调整显示
+  popupDesc.value = props.item.component_props.default ? props.item.component_props.default : '请选择';
   currentDate.value = new Date(props.item.component_props.default);
   switch (date_format) {
     case "YYYY-MM":
