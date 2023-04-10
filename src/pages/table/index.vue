@@ -1,7 +1,7 @@
 <!--
  * @Date: 2023-03-24 09:19:27
  * @LastEditors: hookehuyr hookehuyr@gmail.com
- * @LastEditTime: 2023-04-10 14:38:57
+ * @LastEditTime: 2023-04-10 15:58:46
  * @FilePath: /custom_form/src/pages/table/index.vue
  * @Description: 文件描述
 -->
@@ -202,7 +202,7 @@ const setRefMap = (el, item) => {
     if (item.component_props.tag === "sign") {
       sign.value.push(el);
     }
-    if (item.component_props.tag === "rate_picker") {
+    if (item.component_props.tag === "rate") {
       rate_picker.value.push(el);
     }
   }
@@ -483,7 +483,7 @@ const onActive = (item) => {
     postData.value[item.filed_name] = item.value;
   }
   if (item.type === "rate") {
-    postData.value = _.assign(postData.value, { [item.key]: item.value });
+    postData.value = Object.assign(postData.value, { [item.key]: item.value });
   }
   if (item.key === "picker") { // 下拉框控件
     postData.value = Object.assign(postData.value, { [item.filed_name]: item.value });

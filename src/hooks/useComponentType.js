@@ -13,7 +13,7 @@ import DateTimePickerField from '@/components/DateTimePickerField/index.vue'
 import PhoneField from '@/components/PhoneField/index.vue'
 import EmailField from '@/components/EmailField/index.vue'
 // import SignField from '@/components/SignField/index.vue'
-// import RatePickerField from '@/components/RatePickerField/index.vue'
+import RatePickerField from '@/components/RatePickerField/index.vue'
 // import CalendarField from '@/components/CalendarField/index.vue'
 import IdentityField from '@/components/IdentityField/index.vue'
 import NumberField from '@/components/NumberField/index.vue'
@@ -123,10 +123,10 @@ export function createComponentType(data) {
     //   item.name = item.key
     //   item.component = SignField
     // }
-    // if (item.component_props.tag === 'rate') {
-    //   item.name = item.key
-    //   item.component = RatePickerField
-    // }
+    if (item.component_props.tag === 'rate') {
+      item.name = item.key
+      item.component = RatePickerField
+    }
     // if (item.component_props.tag === 'calendar') {
     //   item.name = item.key
     //   item.component = CalendarField
