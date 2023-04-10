@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-09-08 15:02:45
  * @LastEditors: hookehuyr hookehuyr@gmail.com
- * @LastEditTime: 2023-04-07 17:31:50
+ * @LastEditTime: 2023-04-10 14:26:15
  * @FilePath: /custom_form/src/components/DateTimePickerField/index.vue
  * @Description: 日期时间选择器
 -->
@@ -169,7 +169,7 @@ const validDateTime = () => {
 defineExpose({ validDateTime, id: props.item.key });
 </script>
 
-<style lang="less" scoped>
+<style lang="less">
 .datetime-picker {
   margin: 1rem;
   .label {
