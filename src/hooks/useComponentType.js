@@ -15,7 +15,7 @@ import EmailField from '@/components/EmailField/index.vue'
 // import SignField from '@/components/SignField/index.vue'
 // import RatePickerField from '@/components/RatePickerField/index.vue'
 // import CalendarField from '@/components/CalendarField/index.vue'
-// import IdentityField from '@/components/IdentityField/index.vue'
+import IdentityField from '@/components/IdentityField/index.vue'
 import NumberField from '@/components/NumberField/index.vue'
 // import DesField from '@/components/DesField/index.vue'
 // import DividerField from '@/components/DividerField/index.vue'
@@ -131,10 +131,10 @@ export function createComponentType(data) {
     //   item.name = item.key
     //   item.component = CalendarField
     // }
-    // if (item.component_props.tag === 'id_card') {
-    //   item.name = item.key
-    //   item.component = IdentityField
-    // }
+    if (item.component_props.tag === 'id_card') {
+      item.name = item.key
+      item.component = IdentityField
+    }
     // if (item.component_props.tag === 'desc') {
     //   item.name = item.key
     //   item.component = DesField

@@ -1,7 +1,7 @@
 <!--
  * @Date: 2023-03-24 09:19:27
  * @LastEditors: hookehuyr hookehuyr@gmail.com
- * @LastEditTime: 2023-04-07 17:26:07
+ * @LastEditTime: 2023-04-10 14:38:57
  * @FilePath: /custom_form/src/pages/table/index.vue
  * @Description: 文件描述
 -->
@@ -139,6 +139,7 @@ const address = ref([]);
 const date = ref([]);
 const time = ref([]);
 const datetime = ref([]);
+const id_card = ref([]);
 const area_picker = ref([]);
 const image_uploader = ref([]);
 const file_uploader = ref([]);
@@ -185,6 +186,9 @@ const setRefMap = (el, item) => {
     }
     if (item.component_props.tag === "datetime") {
       datetime.value.push(el);
+    }
+    if (item.component_props.tag === "id_card") {
+      id_card.value.push(el);
     }
     if (item.component_props.tag === "area_picker") {
       area_picker.value.push(el);
@@ -466,6 +470,9 @@ const onActive = (item) => {
   if (item.key === "datetime") {
     postData.value[item.filed_name] = item.value;
   }
+  if (item.key === "id_card") {
+    postData.value[item.filed_name] = item.value;
+  }
   if (item.key === "image_uploader") {
     postData.value[item.filed_name] = item.value;
   }
@@ -656,6 +663,19 @@ const validOther = () => {
           status: datetime.value[index].validDateTime(),
           key: "datetime",
           id: datetime.value[index]?.id
+        };
+        return false;
+      }
+    });
+  }
+  if (id_card.value) {
+    // 身份证控件
+    id_card.value.forEach((item, index) => {
+      if (!id_card.value[index].validIdCard()) {
+        valid = {
+          status: id_card.value[index].validIdCard(),
+          key: "id_card",
+          id: id_card.value[index]?.id
         };
         return false;
       }
