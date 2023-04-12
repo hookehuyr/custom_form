@@ -49,6 +49,8 @@ declare module '@vue/runtime-core' {
     NutSwiper: typeof import('@nutui/nutui-taro')['Swiper']
     NutSwiperItem: typeof import('@nutui/nutui-taro')['SwiperItem']
     NutTextarea: typeof import('@nutui/nutui-taro')['Textarea']
+    NutToast: typeof import('@nutui/nutui-taro')['Toast']
+    NutUploader: typeof import('@nutui/nutui-taro')['Uploader']
     PhoneField: typeof import('./src/components/PhoneField/index.vue')['default']
     PickerField: typeof import('./src/components/PickerField/index.vue')['default']
     RadioField: typeof import('./src/components/RadioField/index.vue')['default']

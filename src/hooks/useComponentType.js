@@ -9,7 +9,7 @@ import DatePickerField from '@/components/DatePickerField/index.vue'
 import TimePickerField from '@/components/TimePickerField/index.vue'
 import DateTimePickerField from '@/components/DateTimePickerField/index.vue'
 // import ImageUploaderField from '@/components/ImageUploaderField/index.vue'
-// import FileUploaderField from '@/components/FileUploaderField/index.vue'
+import FileUploaderField from '@/components/FileUploaderField/index.vue'
 import PhoneField from '@/components/PhoneField/index.vue'
 import EmailField from '@/components/EmailField/index.vue'
 // import SignField from '@/components/SignField/index.vue'
@@ -108,9 +108,9 @@ export function createComponentType(data) {
     // if (item.component_props.tag === 'image_uploader') {
     //   item.component = ImageUploaderField
     // }
-    // if (item.component_props.tag === 'file_uploader') {
-    //   item.component = FileUploaderField
-    // }
+    if (item.component_props.tag === 'file_uploader') {
+      item.component = FileUploaderField
+    }
     if (item.component_props.tag === 'phone') {
       item.name = item.key
       item.component = PhoneField
