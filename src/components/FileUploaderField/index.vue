@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-08-31 16:16:49
  * @LastEditors: hookehuyr hookehuyr@gmail.com
- * @LastEditTime: 2023-04-12 10:59:48
+ * @LastEditTime: 2023-04-12 14:19:07
  * @FilePath: /custom_form/src/components/FileUploaderField/index.vue
  * @Description: 文件上传控件
 -->
@@ -20,19 +20,6 @@
       v-html="item.component_props.note"
       style="font-size: 13px; margin-left: 1rem; color: gray; padding-bottom: 0.5rem; padding-top: 0.25rem; white-space: pre-wrap;"
     />
-    <!-- <div>
-      <p
-        v-for="(file, index) in fileList"
-        :key="index"
-        style="padding-left: 1rem; margin-bottom: 0.5rem"
-      >
-        <p style="font-size: 1rem; word-break: break-all; margin-right: 0.75rem;">
-          <span>{{ index + 1 }}.&nbsp;{{ file.name }}&nbsp;&nbsp;{{ (file.size / 1024 / 1024).toFixed(2) }}MB</span>
-          &nbsp;&nbsp;
-          <span style="color: #e32525; font-size: 0.85rem" @click="beforeDelete(file)">移除</span>
-        </p>
-      </p>
-    </div> -->
     <div style="padding: 1rem; padding-top: 0.5rem;">
       <nut-uploader
         :name="item.name"
@@ -49,7 +36,7 @@
         @failure="uploadFailure"
         @delete="onDelete"
         @change="onChange"
-        @file-item-click="fileItemClick"
+        @image-type-error="imageTypeError"
       >
         <nut-button shape="square" type="primary">
           <template #icon>
@@ -96,9 +83,12 @@ const HideShow = computed(() => {
 
 const emit = defineEmits(["active"]);
 
+// // 固定类型限制
+// const imageTypes = ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'psd', 'tif'];
+
 // // 文件类型中文页面显示
 // const type_text = computed(() => {
-//   return props.item.component_props.file_type;
+//   return imageTypes.join('/');
 // });
 
 // 上传文件集合
@@ -121,12 +111,18 @@ const onOversize = (files) => {
   toast_type.value = 'warn';
 };
 
+const onStart = (options) => {
+  // console.warn(options);
+}
+
 // 自定义上传逻辑
 const beforeXhrUpload = async (xhr, options) => {
+  const imgObj = defaultFileList.value[defaultFileList.value.length - 1];
+  // 判断上传文件格式
+  imgObj.type = imgObj.type ? imgObj.type : imgObj.name.split(".").pop();
   // H5环境
   if (process.env.TARO_ENV === 'h5') {
     // 把本地路径转换成file实体
-    const imgObj = defaultFileList.value[defaultFileList.value.length - 1];
     const imgBlob = await fetch(imgObj.url).then(r => r.blob());
     const imgFile = new File([imgBlob], imgObj.name , { type: imgObj.type });
     // 上传返回file数据结构
@@ -146,7 +142,6 @@ const beforeXhrUpload = async (xhr, options) => {
       loading.value = false;
     }
   } else {
-    const imgObj = defaultFileList.value[defaultFileList.value.length - 1];
     const fs = Taro.getFileSystemManager()
     fs.getFileInfo({
       filePath: imgObj.url,
@@ -250,9 +245,12 @@ const onDelete = ({ file }) => {
   // 完整数据回调到表单上
   emit("active", props.item.value);
 }
-// 上传成功，点击队列项回调
-const fileItemClick = (fileItem) => {
-  console.warn(fileItem);
+
+//
+const imageTypeError = (file) => {
+  toast_msg.value = '请上传指定格式'
+  toast_show.value = true;
+  toast_type.value = 'warn';
 }
 
 const onChange = ({ fileList }) => {
@@ -379,7 +377,7 @@ defineExpose({ validFileUploader });
   }
 
   .type-text {
-    font-size: 0.9rem;
+    font-size: 13px;
     margin-left: 1rem;
     padding-bottom: 1rem;
     color: gray;

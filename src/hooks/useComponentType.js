@@ -8,7 +8,7 @@ import AreaPickerField from '@/components/AreaPickerField/index.vue'
 import DatePickerField from '@/components/DatePickerField/index.vue'
 import TimePickerField from '@/components/TimePickerField/index.vue'
 import DateTimePickerField from '@/components/DateTimePickerField/index.vue'
-// import ImageUploaderField from '@/components/ImageUploaderField/index.vue'
+import ImageUploaderField from '@/components/ImageUploaderField/index.vue'
 import FileUploaderField from '@/components/FileUploaderField/index.vue'
 import PhoneField from '@/components/PhoneField/index.vue'
 import EmailField from '@/components/EmailField/index.vue'
@@ -105,9 +105,9 @@ export function createComponentType(data) {
     if (item.component_props.tag === 'datetime') {
       item.component = DateTimePickerField
     }
-    // if (item.component_props.tag === 'image_uploader') {
-    //   item.component = ImageUploaderField
-    // }
+    if (item.component_props.tag === 'image_uploader') {
+      item.component = ImageUploaderField
+    }
     if (item.component_props.tag === 'file_uploader') {
       item.component = FileUploaderField
     }

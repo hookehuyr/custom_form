@@ -202,6 +202,10 @@ const _sfc_main = create({
       type: Array,
       default: () => ['image', 'video', 'mix'],
     },
+    imageType: {
+      type: Array,
+      default: () => [],
+    },
     camera: {
       type: String,
       default: 'back',
@@ -248,6 +252,7 @@ const _sfc_main = create({
     'delete',
     'update:fileList',
     'file-item-click',
+    'image-type-error',
   ],
   setup(props, { emit }) {
     const fileList = reactive(props.fileList)
@@ -475,8 +480,17 @@ const _sfc_main = create({
       const maximize = props.maximize * 1
       const oversizes = new Array()
       files = files.filter((file) => {
+        if (Taro.getEnv() != 'WEAPP') {
+          file.type = file.originalFileObj.name.split('.').pop()
+        } else {
+          file.type = file.tempFilePath.split('.').pop()
+        }
         if (file.size > maximize) {
           oversizes.push(file)
+          return false
+        } else if (!props.imageType.includes(file.type)) {
+          // 控制文件类型上传
+          emit('image-type-error', file.type)
           return false
         } else {
           return true
