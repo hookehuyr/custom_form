@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-08-31 16:16:49
  * @LastEditors: hookehuyr hookehuyr@gmail.com
- * @LastEditTime: 2023-04-12 09:54:33
+ * @LastEditTime: 2023-04-12 10:59:48
  * @FilePath: /custom_form/src/components/FileUploaderField/index.vue
  * @Description: 文件上传控件
 -->
@@ -18,7 +18,7 @@
     <div
       v-if="item.component_props.note"
       v-html="item.component_props.note"
-      style="font-size: 0.9rem; margin-left: 1rem; color: gray; padding-bottom: 0.5rem; padding-top: 0.25rem; white-space: pre-wrap;"
+      style="font-size: 13px; margin-left: 1rem; color: gray; padding-bottom: 0.5rem; padding-top: 0.25rem; white-space: pre-wrap;"
     />
     <!-- <div>
       <p
@@ -132,7 +132,7 @@ const beforeXhrUpload = async (xhr, options) => {
     // 上传返回file数据结构
     const resImgObj = await handleUpload(imgFile);
     // 上传失败提示
-    if (!resImgObj.src) {
+    if (!resImgObj) {
       options.onFailure?.(resImgObj, options);
       loading.value = false;
     } else {
@@ -162,6 +162,7 @@ const beforeXhrUpload = async (xhr, options) => {
         // 文件上传七牛云
         // 第一次上传
         if (getToken.token) {
+          loading.value = true;
           // 自拍图片上传七牛服务器
           Taro.uploadFile({
               url: 'https://up.qbox.me',
@@ -180,9 +181,6 @@ const beforeXhrUpload = async (xhr, options) => {
                   name: filename,
                   filekey: res.data.filekey,
                   hash: file_info.digest,
-                  // format: image_info.format,
-                  // height: image_info.height,
-                  // width: image_info.width,
                 });
                 // 加入上传成功队列
                 fileList.value.push({
@@ -191,10 +189,13 @@ const beforeXhrUpload = async (xhr, options) => {
                   size: file_info.size
                 });
                 options.onSuccess?.(data, options);
+                loading.value = false;
               }
             })
             .catch((error) => {
               console.error(error)
+              options.onFailure?.(error, options);
+              loading.value = false;
             })
         }
         // 重复上传
@@ -227,10 +228,13 @@ const uploadSuccess = async ({ data, fileItem, option, responseText }) => {
 
 // 上传失败回调
 const uploadFailure = async ({ data, fileItem, option, responseText }) => {
-  console.error("上传失败", "fail");
-  toast_msg.value = '上传失败，请重新尝试！'
-  toast_show.value = true;
-  toast_type.value = 'fail';
+  // 真实上传失败才会提示
+  if (data) {
+    console.error("上传失败", "fail");
+    toast_msg.value = '上传失败，请重新尝试！'
+    toast_show.value = true;
+    toast_type.value = 'fail';
+  }
 };
 
 // 删除上传队列回调
@@ -253,48 +257,6 @@ const fileItemClick = (fileItem) => {
 
 const onChange = ({ fileList }) => {
 }
-
-// 上传前置处理
-const beforeRead = (file) => {
-  // TODO: 需要file_type集合
-  // 类型限制
-  // const file_types = _.map(
-  //   props.item.component_props.file_type.split("/"),
-  //   (item) => `video/${item}`
-  // );
-  let flag = true;
-  if (file.length + 1 > props.item.component_props.max_count) {
-    // 数量限制
-    flag = false;
-    showToast(`最大上传数量为${props.item.component_props.max_count}个`);
-  }
-  if (fileList.value.length + 1 > props.item.component_props.max_count) {
-    // 数量限制
-    flag = false;
-    showToast(`最大上传数量为${props.item.component_props.max_count}个`);
-  }
-  if ((file.size / 1024 / 1024).toFixed(2) > props.item.component_props.max_size) {
-    // 体积限制
-    flag = false;
-    showToast(
-      `最大文件体积为${props.item.component_props.max_size}MB`
-    );
-  }
-  // if (_.isArray(file)) {
-  //   // 多张文件
-  //   const types = _.difference(_.uniq(_.map(file, (item) => item.type)), file_types); // 数组返回不能上传的类型
-  //   if (types.length) {
-  //     flag = false;
-  //     showFailToast("请上传指定格式文件");
-  //   }
-  // } else {
-  //   if (!_.includes(file_types, file.type)) {
-  //     showFailToast("请上传指定格式文件");
-  //     flag = false;
-  //   }
-  // }
-  return flag;
-};
 
 /********** 上传七牛云获取文件地址 ***********/
 const loading = ref(false);
@@ -358,16 +320,21 @@ const uploadQiniu = async (file, token, name, md5) => {
   } else {
       qiniuUploadUrl = 'http://upload.qiniu.com';
   }
-  const { filekey, hash, image_info } = await qiniuUploadAPI(
+  const uploadData = await qiniuUploadAPI(
     qiniuUploadUrl,
     formData,
     config
   );
-  if (filekey) {
+  // 上传失败处理
+  if (!uploadData) {
+    loading.value = false;
+    return false;
+  }
+  if (uploadData.filekey) {
     // 保存文件
     const { data } = await saveFileAPI({
       name,
-      filekey,
+      filekey: uploadData.filekey,
       hash: md5,
       // format: image_info.format,
       // height: image_info.height,

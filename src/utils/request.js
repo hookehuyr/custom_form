@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-09-19 14:11:06
  * @LastEditors: hookehuyr hookehuyr@gmail.com
- * @LastEditTime: 2023-03-24 11:16:19
+ * @LastEditTime: 2023-04-12 10:50:42
  * @FilePath: /custom_form/src/utils/request.js
  * @Description: 简单axios封装，后续按实际处理
  */
@@ -41,7 +41,7 @@ const service = axios.create({
   // 小程序跨域需要定义域名前缀，H5跨域有配置不需要
   baseURL: process.env.TARO_ENV === 'weapp' ? BASE_URL : '', // url = base url + request url
   // withCredentials: true, // send cookies when cross-domain requests
-  timeout: 5000, // request timeout
+  // timeout: 5000, // request timeout
 })
 
 service.defaults.params = {
