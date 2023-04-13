@@ -25,7 +25,7 @@ import NumberField from '@/components/NumberField/index.vue'
 // import RuleField from '@/components/RuleField/index.vue'
 import MultiRuleField from '@/components/MultiRuleField/index.vue'
 // import ButtonField from '@/components/ButtonField/index.vue'
-// import NoteField from '@/components/NoteField/index.vue'
+import NoteField from '@/components/NoteField/index.vue'
 // import NameField from '@/components/NameField/index.vue'
 // import GenderField from '@/components/GenderField/index.vue'
 
@@ -168,10 +168,10 @@ export function createComponentType(data) {
       item.value = []
       item.component = MultiRuleField
     }
-    // if (item.component_props.tag === 'note') {
-    //   item.name = item.key
-    //   item.component = NoteField
-    // }
+    if (item.component_props.tag === 'note') {
+      item.name = item.key
+      item.component = NoteField
+    }
     // if (item.component_props.tag === 'name') {
     //   item.name = item.key
     //   item.component = NameField

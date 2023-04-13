@@ -1,21 +1,23 @@
 <!--
  * @Date: 2022-08-29 14:31:20
  * @LastEditors: hookehuyr hookehuyr@gmail.com
- * @LastEditTime: 2023-03-08 15:28:33
- * @FilePath: /data-table/src/components/NoteField/index.vue
+ * @LastEditTime: 2023-04-13 16:09:03
+ * @FilePath: /custom_form/src/components/NoteField/index.vue
  * @Description: 富文本组件
 -->
 <template>
   <div v-if="HideShow" class="note-field-page">
     <div class="label">
-      <span v-if="item.component_props.required" class="required">&nbsp;*</span>
-      <span v-if="!item.component_props.hide_label">{{ item.component_props.label }}</span>
+      <text v-if="item.component_props.required" class="required">&nbsp;*</text>
+      <text v-if="!item.component_props.hide_label">{{ item.component_props.label }}</text>
     </div>
-    <div class="html" style="padding: 0.5rem 1rem 0 1rem;" v-html="item.component_props.note"></div>
+    <div class="html" style="padding: 0 1rem; font-size: 16px;" v-html="item.component_props.note"></div>
   </div>
 </template>
 
 <script setup>
+import { ref, computed, watch, onMounted, reactive } from "vue";
+
 const props = defineProps({
   item: Object,
 });
@@ -28,11 +30,12 @@ const HideShow = computed(() => {
 <style lang="less">
 .note-field-page {
   .label {
-    padding: 1rem 1rem 0 1rem;
-    font-size: 0.9rem;
+    margin-left: 1rem;
+    padding-bottom: 20px;
+    font-size: 26px;
     font-weight: bold;
 
-    span.required {
+    text.required {
       color: red;
     }
   }
