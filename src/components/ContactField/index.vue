@@ -1,35 +1,12 @@
 <!--
  * @Date: 2022-11-23 14:41:53
  * @LastEditors: hookehuyr hookehuyr@gmail.com
- * @LastEditTime: 2023-04-13 18:19:36
+ * @LastEditTime: 2023-04-13 18:24:01
  * @FilePath: /custom_form/src/components/ContactField/index.vue
  * @Description: 联系我们控件
 -->
 <template>
   <div v-if="HideShow" class="contact-field-page">
-    <!-- <van-popover v-model:show="showPopover" placement="left">
-      <div class="contact-content">
-        <div class="text-tel">电话联系</div>
-        <div>
-          <a
-            :style="{ color: styleColor.baseColor }"
-            :href="`tel:${item.component_props.tel}`"
-          >
-            {{ item.component_props.tel }}
-          </a>
-        </div>
-        <div v-if="item.component_props.image_url">
-          <div class="text-qr_code">微信联系</div>
-          <van-image width="100" height="100" :src="item.component_props.image_url" />
-        </div>
-      </div>
-      <template #reference>
-        <div class="wrapper">
-          <van-icon name="phone-o" size="2rem" :color="styleColor.baseColor" />
-        </div>
-      </template>
-    </van-popover> -->
-
     <div class="wrapper">
       <Service size="25" :color="styleColor.baseColor" @click="onClick" />
       <div class="triangle"></div>
@@ -75,7 +52,6 @@ const onClick = () => {
   // 给每张图片添加查看事件
   nextTick(() => {
     var img = $('#qr_code');
-    console.warn(img);
     $(img).on('longpress', function (e) {
       Taro.previewImage({
         // 需要预览的图片链接列表
