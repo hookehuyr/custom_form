@@ -488,7 +488,10 @@ const _sfc_main = create({
         if (file.size > maximize) {
           oversizes.push(file)
           return false
-        } else if (!props.imageType.includes(file.type)) {
+        } else if (
+          props.imageType.length &&
+          !props.imageType.includes(file.type)
+        ) {
           // 控制文件类型上传
           emit('image-type-error', file.type)
           return false
