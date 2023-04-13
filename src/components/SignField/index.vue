@@ -1,63 +1,47 @@
 <!--
  * @Date: 2022-09-06 16:29:31
  * @LastEditors: hookehuyr hookehuyr@gmail.com
- * @LastEditTime: 2023-03-23 15:50:45
- * @FilePath: /data-table/src/components/SignField/index.vue
+ * @LastEditTime: 2023-04-13 15:28:49
+ * @FilePath: /custom_form/src/components/SignField/index.vue
  * @Description: 电子签名控件
 -->
 <template>
   <div v-if="HideShow" class="sign-page">
     <div class="label">
-      <span v-if="item.component_props.required">&nbsp;*</span>
+      <text v-if="item.component_props.required">&nbsp;*</text>
       {{ item.component_props.label }}
-      {{ valid }}
     </div>
-    <div ref="wrapperRef" class="esign-wrapper">
-      <!-- <div style="padding: 1rem; position: relative; height: 150px; background-color: #FCFCFC;border: 1px solid #EAEAEA; border-radius: 5px;"> -->
-      <vue-esign v-if="esignWidth" ref="esign" class="sign-wrapper" :width="esignWidth" :height="esignHeight" :isCrop="isCrop"
-        :lineWidth="lineWidth" :lineColor="lineColor" :bgColor.sync="bgColor" />
-      <div v-if="show_sign" class="whiteboard">
-        <div class="text" @click="startSign">
-          <van-icon name="edit" />&nbsp;点击开始签署电子签名
-        </div>
+    <div class="esign-wrapper">
+      <nut-signature v-if="show_sign" class="sign-wrapper" @confirm="confirm" @clear="clear"></nut-signature>
+      <div v-if="image_url">
+        <img :src="image_url" style="width: 100%; border: 1px solid #eaeaea; background-color: #fcfcfc;">
+        <nut-button color="red" @click="removeSign">删除签名</nut-button>
       </div>
     </div>
-    <div v-if="!show_sign">
-      <div v-if="show_control" class="control-sign">
-        <van-row gutter="20" style="padding: 0 1rem">
-          <van-col :span="12">
-            <van-button type="default" block @click="handleGenerate">确认签名</van-button>
-          </van-col>
-          <van-col :span="12">
-            <van-button type="default" block @click="cancelSign">取消签名</van-button>
-          </van-col>
-        </van-row>
-      </div>
-      <div v-else style="padding: 0 1rem">
-        <van-button type="danger" block @click="handleReset">删除签名</van-button>
-      </div>
-    </div>
-    <div v-if="show_empty" class="van-field__error-message" style="padding: 0 1rem 1rem 1rem">
+    <div v-if="show_empty" style="padding: 10px 20px; color: red; font-size: 12px;">
       电子签名不能为空
     </div>
-    <van-divider />
+    <nut-divider :style="{ color: '#ebedf0' }" />
+    <nut-overlay v-model:visible="loading">
+      <div class="wrapper" style="color: white; font-size: 15px;">
+        <Loading />
+        上传中...
+      </div>
+    </nut-overlay>
+    <nut-toast :msg="toast_msg" v-model:visible="toast_show" :type="toast_type" />
   </div>
-
-  <van-overlay :show="loading">
-    <div class="wrapper" @click.stop>
-      <van-loading vertical color="#FFFFFF">生成中...</van-loading>
-    </div>
-  </van-overlay>
 </template>
 
 <script setup>
+import Taro, { useLoad } from '@tarojs/taro'
+import { ref, computed, watch, onMounted, reactive } from "vue";
 import { v4 as uuidv4 } from "uuid";
 import { qiniuTokenAPI, qiniuUploadAPI, saveFileAPI } from "@/api/common";
-import { showSuccessToast, showFailToast } from "vant";
-import { useRoute } from "vue-router";
-import BMF from "browser-md5-file";
+// import { showSuccessToast, showFailToast } from "vant";
+import { getUrlParams } from "@/utils/tools";
 import { getEtag } from "@/utils/qetag.js"; // 生成hash值
 import dayjs from "dayjs";
+import { Uploader, Loading, Edit } from '@nutui/icons-vue-taro';
 
 const props = defineProps({
   item: Object,
@@ -66,33 +50,110 @@ const props = defineProps({
 const HideShow = computed(() => {
   return !props.item.component_props.disabled
 })
-const $route = useRoute();
+
+const toast_msg = ref('');
+const toast_show = ref(false);
+const toast_type = ref('success');
+
 const emit = defineEmits(["active"]);
 
-const esign = ref(null);
+const show_sign = ref(true);
 
-let esignWidth = ref();
-let esignHeight = ref();
-const wrapperRef = ref(null)
-onMounted(() => {
-  // 动态计算画板canvas宽度/高度
-  setTimeout(() => {
-    esignWidth.value = wrapperRef.value.offsetWidth - 32;
-    esignHeight.value = (window.innerHeight) / 5;
-  }, 100);
-})
-const lineWidth = ref(6);
-const lineColor = ref("#000000");
-const bgColor = ref("#FCFCFC");
-const isCrop = ref(false);
-const show_control = ref(true);
-const image_url = ref("");
-const show_empty = ref(false);
+const removeSign = () => {
+  show_sign.value = true;
+  clear()
+}
 
-const handleReset = () => {
-  // 清空画板
-  esign.value.reset();
-  show_control.value = true;
+// 确认签名回调
+const confirm = async (canvas, data) => {
+  if (canvas === '请绘制签名') {
+    validSign();
+    return false;
+  }
+  // H5环境 只能获取canvas
+  if (process.env.TARO_ENV === 'h5') {
+    let affix = uuidv4();
+    let fileName = `uploadForm/${formCode}/${affix}_sign.png`;
+    let file = dataURLtoFile(canvas.toDataURL("image/png"), fileName); // 生成文件
+    const imgUrl = await handleUpload(file, fileName);
+    if (imgUrl) {
+      loading.value = false;
+      props.item.value = {
+        key: "sign",
+        filed_name: props.item.key,
+        value: { name: `电子签名${dayjs().format('YYYYMMDDHHmmss')}.png`, url: imgUrl.src},
+      };
+      image_url.value = imgUrl.src;
+      show_sign.value = false;
+      show_empty.value = false;
+      emit("active", props.item.value);
+    }
+  } else { // weapp 环境
+    if (!data) {
+      toast_msg.value = '生成签名失败，请稍后尝试'
+      toast_show.value = true;
+      toast_type.value = 'warn';
+      return false;
+    }
+    const fs = Taro.getFileSystemManager()
+    fs.getFileInfo({
+      filePath: data,
+      success: async (res) => {
+        const file_info = res;
+        // 获取七牛token
+        const filename = `uploadForm/${formCode}/${file_info.digest}_sign.png`; // 真实文件名
+        const getToken = await qiniuTokenAPI({
+          name: filename,
+          hash: file_info.digest,
+        });
+        // 文件上传七牛云
+        // 第一次上传
+        if (getToken.token) {
+          loading.value = true;
+          // 自拍图片上传七牛服务器
+          Taro.uploadFile({
+              url: 'https://up.qbox.me',
+              filePath: data,
+              name: `file`,
+              formData: {
+                token: getToken.token,
+                key: filename
+              },
+            })
+            .then(async (res) => {
+              res.data = JSON.parse(res.data);
+              if (res.data.filekey) {
+                // 保存文件
+                const { data } = await saveFileAPI({
+                  name: filename,
+                  filekey: res.data.filekey,
+                  hash: file_info.digest,
+                });
+                // 生成图片成功
+                if (data.src) {
+                  loading.value = false;
+                  props.item.value = {
+                    key: "sign",
+                    filed_name: props.item.key,
+                    value: { name: `电子签名${dayjs().format('YYYYMMDDHHmmss')}.png`, url: data.src },
+                  };
+                  image_url.value = data.src;
+                  show_sign.value = false;
+                  show_empty.value = false;
+                  emit("active", props.item.value);
+                }
+              }
+            })
+            .catch((error) => {
+              console.error(error)
+              loading.value = false;
+            })
+        }
+      }
+    })
+  }
+};
+const clear = () => {
   // 删除可能存在的签名
   image_url.value = "";
   props.item.value = {
@@ -101,11 +162,14 @@ const handleReset = () => {
     value: "",
   };
   emit("active", props.item.value);
-};
+}
+
+const image_url = ref("");
+const show_empty = ref(false);
 
 /********** 上传七牛云获取图片地址 ***********/
 const loading = ref(false);
-const formCode = $route.query.code; // 表单code
+const formCode = getUrlParams(location.href) ? getUrlParams(location.href).code : ''; // 表单code
 const uuid = () => {
   let s = [];
   let hexDigits = "0123456789abcdef";
@@ -169,35 +233,6 @@ const handleUpload = async (files, filename) => {
   return imgUrl;
 };
 
-const handleGenerate = () => {
-  esign.value
-    .generate()
-    .then(async (res) => {
-      let affix = uuidv4();
-      let fileName = `uploadForm/${formCode}/${affix}_sign.png`;
-      let file = dataURLtoFile(res, fileName); // 生成文件
-      const imgUrl = await handleUpload(file, fileName);
-      loading.value = false;
-      props.item.value = {
-        key: "sign",
-        filed_name: props.item.key,
-        value: { name: `电子签名${dayjs().format('YYYYMMDDHHmmss')}.png`, url: imgUrl.src},
-      };
-      image_url.value = imgUrl.src;
-      show_control.value = false;
-      show_empty.value = false;
-      emit("active", props.item.value);
-    })
-    .catch((err) => {
-      loading.value = false;
-      // 签名生成失败
-      console.warn(err);
-      if (err) {
-        showFailToast("签名生成失败");
-      }
-    });
-};
-
 //将图片base64转换为文件
 const dataURLtoFile = (dataurl, filename) => {
   var arr = dataurl.split(","),
@@ -209,17 +244,6 @@ const dataURLtoFile = (dataurl, filename) => {
     u8arr[n] = bstr.charCodeAt(n);
   }
   return new File([u8arr], filename, { type: mime });
-};
-
-const show_sign = ref(true);
-const startSign = () => {
-  show_sign.value = false;
-  show_empty.value = false;
-};
-const cancelSign = () => {
-  show_sign.value = true;
-  show_empty.value = false;
-  handleReset();
 };
 
 const validSign = () => {
@@ -235,38 +259,39 @@ const validSign = () => {
 defineExpose({ validSign });
 </script>
 
-<!-- <script>
+<script>
 export default {
-  methods: {
-    validSign () {
-      console.warn(0);
-    }
-  }
+  mounted() {
+  },
 }
-</script> -->
+</script>
 
-<style lang="less" scoped>
+<style lang="less">
 .sign-page {
 
   // padding-bottom: 1rem;
   .label {
-    padding: 1rem 1rem 0 1rem;
-    font-size: 0.9rem;
+    margin-left: 1rem;
+    padding-bottom: 20px;
+    font-size: 26px;
     font-weight: bold;
 
-    span {
+    text {
       color: red;
     }
   }
 
   .esign-wrapper {
-    padding: 1rem;
+    padding: 0 1rem;
     position: relative;
     box-sizing: border-box;
 
     .sign-wrapper {
-      border: 1px solid #eaeaea;
+      // border: 1px solid #eaeaea;
       border-radius: 5px;
+    }
+    .nut-signature-inner {
+      background: #fcfcfc !important;
     }
 
     .whiteboard {
@@ -274,11 +299,12 @@ export default {
       height: 100%;
       width: 100%;
       left: 50%;
-      top: 50%;
+      top: 40%;
       transform: translate(-50%, -50%);
       text-align: center;
 
       .text {
+        font-size: 28px;
         position: absolute;
         width: 100%;
         top: 50%;

@@ -12,7 +12,7 @@ import ImageUploaderField from '@/components/ImageUploaderField/index.vue'
 import FileUploaderField from '@/components/FileUploaderField/index.vue'
 import PhoneField from '@/components/PhoneField/index.vue'
 import EmailField from '@/components/EmailField/index.vue'
-// import SignField from '@/components/SignField/index.vue'
+import SignField from '@/components/SignField/index.vue'
 import RatePickerField from '@/components/RatePickerField/index.vue'
 // import CalendarField from '@/components/CalendarField/index.vue'
 import IdentityField from '@/components/IdentityField/index.vue'
@@ -119,10 +119,10 @@ export function createComponentType(data) {
       item.name = item.key
       item.component = EmailField
     }
-    // if (item.component_props.tag === 'sign') {
-    //   item.name = item.key
-    //   item.component = SignField
-    // }
+    if (item.component_props.tag === 'sign') {
+      item.name = item.key
+      item.component = SignField
+    }
     if (item.component_props.tag === 'rate') {
       item.name = item.key
       item.component = RatePickerField
