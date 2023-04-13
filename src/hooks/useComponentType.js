@@ -21,7 +21,7 @@ import NumberField from '@/components/NumberField/index.vue'
 // import DividerField from '@/components/DividerField/index.vue'
 // import VideoField from '@/components/VideoField/index.vue'
 // import MarqueeField from '@/components/MarqueeField/index.vue'
-// import ContactField from '@/components/ContactField/index.vue'
+import ContactField from '@/components/ContactField/index.vue'
 // import RuleField from '@/components/RuleField/index.vue'
 import MultiRuleField from '@/components/MultiRuleField/index.vue'
 // import ButtonField from '@/components/ButtonField/index.vue'
@@ -151,10 +151,10 @@ export function createComponentType(data) {
     //   item.name = item.key
     //   item.component = MarqueeField
     // }
-    // if (item.component_props.tag === 'contact') {
-    //   item.name = item.key
-    //   item.component = ContactField
-    // }
+    if (item.component_props.tag === 'contact') {
+      item.name = item.key
+      item.component = ContactField
+    }
     // if (item.component_props.tag === 'rule') {
     //   item.name = item.key
     //   item.component = RuleField

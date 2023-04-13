@@ -35,6 +35,7 @@ declare module '@vue/runtime-core' {
     NutDatePicker: typeof import('@nutui/nutui-taro')['DatePicker']
     NutDialog: typeof import('@nutui/nutui-taro')['Dialog']
     NutDivider: typeof import('@nutui/nutui-taro')['Divider']
+    NutFixedNav: typeof import('@nutui/nutui-taro')['FixedNav']
     NutForm: typeof import('@nutui/nutui-taro')['Form']
     NutFormItem: typeof import('@nutui/nutui-taro')['FormItem']
     NutInput: typeof import('@nutui/nutui-taro')['Input']
@@ -42,6 +43,7 @@ declare module '@vue/runtime-core' {
     NutNumberKeyboard: typeof import('@nutui/nutui-taro')['NumberKeyboard']
     NutOverlay: typeof import('@nutui/nutui-taro')['Overlay']
     NutPicker: typeof import('@nutui/nutui-taro')['Picker']
+    NutPopover: typeof import('@nutui/nutui-taro')['Popover']
     NutPopup: typeof import('@nutui/nutui-taro')['Popup']
     NutRadio: typeof import('@nutui/nutui-taro')['Radio']
     NutRadioGroup: typeof import('@nutui/nutui-taro')['RadioGroup']
@@ -65,6 +67,10 @@ declare module '@vue/runtime-core' {
     TextareaField: typeof import('./src/components/TextareaField/index.vue')['default']
     TextField: typeof import('./src/components/TextField/index.vue')['default']
     TimePickerField: typeof import('./src/components/TimePickerField/index.vue')['default']
+    VideoField: typeof import('./src/components/VideoField/index.vue')['default']
+  }
+}
+ex.vue')['default']
     VideoField: typeof import('./src/components/VideoField/index.vue')['default']
   }
 }
