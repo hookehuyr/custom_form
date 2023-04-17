@@ -1,7 +1,7 @@
 <!--
  * @Date: 2023-03-24 09:19:27
  * @LastEditors: hookehuyr hookehuyr@gmail.com
- * @LastEditTime: 2023-04-10 15:58:46
+ * @LastEditTime: 2023-04-17 14:09:23
  * @FilePath: /custom_form/src/pages/table/index.vue
  * @Description: 文件描述
 -->
@@ -73,7 +73,7 @@ const ruleForm = ref(null);
 
 // // 获取表单设置
 const store = mainStore();
-const { formSetting, formInfo, callIndex } = storeToRefs(store);
+const { formSetting, callIndex } = storeToRefs(store);
 
 // web端判断封面图片高度
 const is_pc = computed(() => process.env.TARO_ENV === 'h5' && wxInfo().isPC);
@@ -223,6 +223,8 @@ const onSubmitPwd = async () => {
   }
 }
 
+const formInfo = ref({})
+
 onMounted(async () => {
   // 检查是否从首页跳转
   if (!callIndex.value) {
@@ -238,6 +240,7 @@ onMounted(async () => {
   const { data } = await queryFormAPI({ form_code });
 
   const form_data = data;
+  formInfo.value = data;
   // 动态修改标题
   Taro.setNavigationBarTitle({
     title: form_data.name ? form_data.name : ''
