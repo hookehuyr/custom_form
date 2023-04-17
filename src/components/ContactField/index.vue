@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-11-23 14:41:53
  * @LastEditors: hookehuyr hookehuyr@gmail.com
- * @LastEditTime: 2023-04-13 18:24:01
+ * @LastEditTime: 2023-04-17 11:39:42
  * @FilePath: /custom_form/src/components/ContactField/index.vue
  * @Description: 联系我们控件
 -->
@@ -9,7 +9,7 @@
   <div v-if="HideShow" class="contact-field-page">
     <div class="wrapper">
       <Service size="25" :color="styleColor.baseColor" @click="onClick" />
-      <div class="triangle"></div>
+      <div v-if="showPopover" class="triangle"></div>
       <div v-if="showPopover" class="contact-content">
         <div class="text-tel">电话联系</div>
         <div @click="onTel">
