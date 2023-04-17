@@ -150,6 +150,39 @@ const deepClone = (val) => {
   }
 }
 
+// 获取交集
+const intersection = () => {
+  const arrays = Array.prototype.slice.call(arguments); // 将参数转换为数组
+  const result = [];
+
+  if (arrays.length === 0) { // 如果没有参数，则返回空数组
+    return result;
+  }
+
+  const firstArray = arrays[0];
+  for (let i = 0; i < firstArray.length; i++) {
+    const currentElement = firstArray[i];
+    if (result.includes(currentElement)) { // 如果当前元素已经在结果中，则跳过
+      continue;
+    }
+
+    let foundInAllArrays = true;
+    for (let j = 1; j < arrays.length; j++) {
+      const currentArray = arrays[j];
+      if (!currentArray.includes(currentElement)) { // 如果当前元素不在其中一个数组中，则跳过
+        foundInAllArrays = false;
+        break;
+      }
+    }
+
+    if (foundInAllArrays) { // 如果当前元素在所有数组中都存在，则添加到结果中
+      result.push(currentElement);
+    }
+  }
+
+  return result;
+}
+
 export {
   formatDate,
   wxInfo,
@@ -160,4 +193,5 @@ export {
   getUrlParams,
   stringifyQuery,
   deepClone,
+  intersection,
 }

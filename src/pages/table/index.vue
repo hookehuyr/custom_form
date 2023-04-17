@@ -1,7 +1,7 @@
 <!--
  * @Date: 2023-03-24 09:19:27
  * @LastEditors: hookehuyr hookehuyr@gmail.com
- * @LastEditTime: 2023-04-17 14:09:23
+ * @LastEditTime: 2023-04-17 14:19:54
  * @FilePath: /custom_form/src/pages/table/index.vue
  * @Description: 文件描述
 -->
@@ -63,7 +63,7 @@ import { storeToRefs } from 'pinia'
 import { mainStore } from '@/stores'
 import { queryFormAPI, postVerifyPasswordAPI } from "@/api/form.js";
 import { addFormDataAPI } from "@/api/data.js";
-import { wxInfo, getUrlParams, deepClone } from "@/utils/tools";
+import { wxInfo, getUrlParams, deepClone, intersection } from "@/utils/tools";
 import { styleColor } from "@/constant.js";
 import { sharePage } from '@/composables/useShare.js'
 // 初始化WX环境
@@ -399,7 +399,7 @@ const checkRules = () => {
           condition += `${k}${op}`
         }
         if (typeof postData.value[expr['field_name']] === 'object') { // 表单值为数组（多选）
-          const k = !!(_.intersection(expr['values'], postData.value[expr['field_name']])).length;
+          const k = !!(intersection(expr['values'], postData.value[expr['field_name']])).length;
           condition += `${k}${op}`
         }
       });
