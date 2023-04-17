@@ -1,7 +1,7 @@
 <!--
  * @Date: 2022-08-30 11:34:19
  * @LastEditors: hookehuyr hookehuyr@gmail.com
- * @LastEditTime: 2023-04-04 15:07:00
+ * @LastEditTime: 2023-04-17 14:49:50
  * @FilePath: /custom_form/src/components/MultiRuleField/index.vue
  * @Description: 多选规则确认控件
 -->
@@ -78,7 +78,6 @@ const onClick = (item) => {
   validMultiRule();
   // 发送自定义数据结构
   props.item.value = { key: props.item.key, value: checkbox_value.value, type: "multi_rule" };
-  console.warn(props.item.value);
   emit("active", props.item.value);
 }
 
