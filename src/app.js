@@ -1,7 +1,7 @@
 /*
  * @Date: 2023-03-23 11:17:54
  * @LastEditors: hookehuyr hookehuyr@gmail.com
- * @LastEditTime: 2023-03-24 16:04:21
+ * @LastEditTime: 2023-04-17 16:01:15
  * @FilePath: /custom_form/src/app.js
  * @Description: 文件描述
  */
@@ -19,15 +19,15 @@ const App = createApp({
       const code = getUrlParams(location.href)
         ? getUrlParams(location.href).code
         : ''
-      const store = mainStore();
+      const store = mainStore()
       // 数据收集设置
-      const { data } = await getFormSettingAPI({ form_code: code });
-      const form_setting = {};
+      const { data } = await getFormSettingAPI({ form_code: code })
+      const form_setting = {}
       if (data.length) {
-        Object.assign(form_setting, data[0]['property_list'], data[0]['extend']);
+        Object.assign(form_setting, data[0]['property_list'], data[0]['extend'])
       }
       // 缓存表单设置
-      store.changeFormSetting(form_setting);
+      store.changeFormSetting(form_setting)
     }
   },
 
@@ -46,11 +46,10 @@ const App = createApp({
   },
 
   // 对应 onShow
-  onShow(options) {
-  },
+  onShow(options) {},
 
   // 对应 onHide
-  onHide() { },
+  onHide() {},
 
   // 入口组件不需要实现 render 方法，即使实现了也会被 taro 所覆盖
 })
